@@ -19,8 +19,12 @@ public final class FrequencyRecogniser {
 
 
         AudioRecord record = new AudioRecord(audioSource, sampleRateInHz, channelConfig, audioFormat, bufferSizeInBytes);
-        record.startRecording();
 
+        if (record.getState() == AudioRecord.STATE_INITIALIZED) {
+            record.startRecording();
+        } else {
+            return;
+        }
 
         do {
             short[] buffer = new short[bufferSizeInBytes / 2];
