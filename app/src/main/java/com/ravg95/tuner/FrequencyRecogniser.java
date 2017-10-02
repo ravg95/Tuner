@@ -6,20 +6,28 @@ import android.media.AudioManager;
 import android.media.AudioRecord;
 
 import android.media.MediaRecorder;
-import android.media.audiofx.Visualizer;
-import android.util.Log;
 
+import lombok.NonNull;
 
-public final class FrequencyRecogniser {
-    public static void listen(DoublePointer frequency) {
-        int audioSource = MediaRecorder.AudioSource.MIC;
-        int sampleRateInHz = 44100;
-        int channelConfig = AudioFormat.CHANNEL_IN_MONO;
-        int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
-        int bufferSizeInBytes = AudioRecord.getMinBufferSize(sampleRateInHz, channelConfig, audioFormat);
+public class FrequencyRecogniser {
+    private AudioRecord record;
+    private int audioSource = MediaRecorder.AudioSource.MIC;
+    private int sampleRateInHz = 44100;
+    private int channelConfig = AudioFormat.CHANNEL_IN_MONO;
+    private int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
+    private int bufferSizeInBytes = AudioRecord.getMinBufferSize(sampleRateInHz, channelConfig, audioFormat);
+    @NonNull
+    private DoublePointer frequency;
 
+    public FrequencyRecogniser(DoublePointer frequency) {
+        this.frequency = frequency;
+    }
 
-        AudioRecord record = new AudioRecord(audioSource, sampleRateInHz, channelConfig, audioFormat, bufferSizeInBytes);
+    public void init() {
+        record = new AudioRecord(audioSource, sampleRateInHz, channelConfig, audioFormat, bufferSizeInBytes);
+    }
+
+    public void listen() {
 
         if (record.getState() == AudioRecord.STATE_INITIALIZED) {
             record.startRecording();
@@ -27,17 +35,21 @@ public final class FrequencyRecogniser {
             return;
         }
 
-
         do {
 
             short[] buffer = new short[bufferSizeInBytes / 2];
             int readBytes = record.read(buffer, 0, bufferSizeInBytes / 2);
             if (readBytes >= 0) {           // if readBytes < 0, an error has occured while reading
-               //1 frequency.setValue(FFT.analyze(buffer, readBytes));
+                 frequency.setValue(FFT.analyze(buffer, readBytes));
             }
 
         }
-        while (record.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING );
+        while (record.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING);
+    }
+
+    public void stopListening() {
+        record.stop();
+        //need to init befroe listening again
     }
 
 }

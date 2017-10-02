@@ -10,42 +10,45 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends AppCompatActivity implements DoublePointer.OnValueChangedListener{
+public class MainActivity extends AppCompatActivity implements DoublePointer.OnValueChangedListener {
 
     private TextView textView;
+    private FrequencyRecogniser frequencyRecogniser;
 
-    private DoublePointer freq;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         textView = (TextView) findViewById(R.id.textView);
-        freq = new DoublePointer(0, this);
+        frequencyRecogniser = new FrequencyRecogniser(new DoublePointer(0, this));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         Timer t = new Timer();
-        TimerTask tt = new DelayedStart(this);
+        TimerTask tt = new DelayedStart();
         t.schedule(tt, 2000);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        frequencyRecogniser.stopListening();
     }
 
 
     @Override
     public void valueChanged(double newValue) {
-        textView.setText(newValue+"Hz");
+        textView.setText();
     }
 
     private class DelayedStart extends TimerTask {
-        DoublePointer.OnValueChangedListener listener;
-        public DelayedStart(DoublePointer.OnValueChangedListener listener) {
-            this.listener=listener;
-        }
 
         @Override
         public void run() {
-            FrequencyRecogniser.listen(new DoublePointer(0, listener));
+            frequencyRecogniser.init();
+            frequencyRecogniser.listen();
         }
     }
 
