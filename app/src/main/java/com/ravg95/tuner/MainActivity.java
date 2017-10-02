@@ -10,43 +10,44 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends AppCompatActivity implements DoublePointer.OnValueChangedListener {
+public class MainActivity extends AppCompatActivity implements DoublePointer.OnValueChangedListener{
 
-    //private TextView textView;
-    //private Visualizer visualizer;
-    //private DoublePointer freq;
+    private TextView textView;
+
+    private DoublePointer freq;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-    //    textView = (TextView) findViewById(R.id.textView);
-       // freq = new DoublePointer(0, this);
+        textView = (TextView) findViewById(R.id.textView);
+        freq = new DoublePointer(0, this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        FrequencyRecogniser.listen(new DoublePointer(0));
-       // visualizer = new Visualizer(0);
-        //analyze();
+        Timer t = new Timer();
+        TimerTask tt = new DelayedStart(this);
+        t.schedule(tt, 2000);
     }
+
 
     @Override
     public void valueChanged(double newValue) {
-    //    textView.setText(newValue+"Hz");
+        textView.setText(newValue+"Hz");
     }
 
-    public void analyze(){
-        do {
-            byte[] fft = new byte[3000];
-       //     visualizer.setEnabled(true);
-        //    visualizer.getFft(fft);
-            double frequency = 0;
-            for (int i = 0; i < fft.length; i++) {
-                if (fft[i] > frequency) frequency = fft[i];
-            }
-           // freq.setValue(frequency);
-        }while(true);
+    private class DelayedStart extends TimerTask {
+        DoublePointer.OnValueChangedListener listener;
+        public DelayedStart(DoublePointer.OnValueChangedListener listener) {
+            this.listener=listener;
+        }
+
+        @Override
+        public void run() {
+            FrequencyRecogniser.listen(new DoublePointer(0, listener));
+        }
     }
 
 }
+

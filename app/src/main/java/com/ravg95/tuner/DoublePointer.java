@@ -11,9 +11,9 @@ class DoublePointer {
     @Setter
     private OnValueChangedListener onValueChangedListener;
 
-    public DoublePointer(double val){//, OnValueChangedListener listener) {
+    public DoublePointer(double val, OnValueChangedListener listener) {
         value = val;
-        //onValueChangedListener = listener;
+        onValueChangedListener = listener;
     }
 
     public void setValue(double val){
@@ -21,7 +21,7 @@ class DoublePointer {
         onValueChangedListener.valueChanged(value);
     }
 
-    public interface OnValueChangedListener {
+   public interface OnValueChangedListener {
         void valueChanged(double newValue);
     }
 }
