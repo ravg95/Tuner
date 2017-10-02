@@ -28,9 +28,9 @@ public final class FrequencyRecogniser {
 
         do {
             short[] buffer = new short[bufferSizeInBytes / 2];
-            int msg = record.read(buffer, 0, bufferSizeInBytes / 2);
-            if (msg >= 0) { //if no error read returns a non-negative number of read bytes
-                //do FFT with buffer and msg read bytes
+            int readBytes = record.read(buffer, 0, bufferSizeInBytes / 2);
+            if (readBytes >= 0) {           // if readBytes < 0, an error has occured while reading
+               //1 frequency.setValue(FFT.analyze(buffer, readBytes));
             }
 
         } while (record.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING);

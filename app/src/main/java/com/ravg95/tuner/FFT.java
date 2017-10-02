@@ -5,8 +5,8 @@ package com.ravg95.tuner;
  */
 
 public final class FFT {
-    public static void listen(short[] buffer, int dataLength) {
-
+    public static double analyze(short[] buffer, int dataLength) {
+        return 0;
     }
 
 }
