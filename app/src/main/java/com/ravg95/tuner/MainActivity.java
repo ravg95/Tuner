@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
 
     @Override
     public void valueChanged(double newValue) {
-        textView.setText();
+        textView.setText(new String(newValue+"Hz"));
     }
 
     private class DelayedStart extends TimerTask {
