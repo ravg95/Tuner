@@ -11,7 +11,9 @@ import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements DoublePointer.OnValueChangedListener {
 
-    private TextView textView;
+    private TextView freqView;
+    private TextView toneView;
+    private TextView distView;
     private FrequencyRecogniser frequencyRecogniser;
     private ToneAnalyzer toneAnalyzer;
 
@@ -19,7 +21,9 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        textView = (TextView) findViewById(R.id.textView);
+        freqView = (TextView) findViewById(R.id.freq);
+        toneView = (TextView) findViewById(R.id.tone);
+        distView = (TextView) findViewById(R.id.dist);
         frequencyRecogniser = new FrequencyRecogniser(new DoublePointer(0, this));
         toneAnalyzer = new ToneAnalyzer();
         toneAnalyzer.init();
@@ -41,15 +45,22 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
 
 
     @Override
-    public void valueChanged(double newValue) {
-        Log.d("value changed frequency","freq: " + newValue + "H/ ");
-        try {
-            DoublePointer distance = new DoublePointer(0, null);
-            String note = toneAnalyzer.getNearestNoteAndDistance(newValue, distance);
-           Log.d("value changed sound","Note: " + note + "\ndistance: " + distance.getValue());
-        }catch (NullPointerException e) {
-            Log.e("value changed","exception was thrown");
-        }
+    public void valueChanged(final double newValue) {
+        Log.d("value changed frequency","freq: " + newValue + "Hz");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+                freqView.setText(newValue + "Hz");
+                DoublePointer distance = new DoublePointer(0, null);
+                String note = toneAnalyzer.getNearestNoteAndDistance(newValue, distance);
+                toneView.setText(note);
+                distView.setText(distance.getValue()+ "Hz");
+                Log.d("value changed sound","Note: " + note + "\ndistance: " + distance.getValue());
+
+            }
+        });
+
     }
 
     private class DelayedStart extends TimerTask {

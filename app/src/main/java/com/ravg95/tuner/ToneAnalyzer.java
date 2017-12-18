@@ -10,7 +10,7 @@ import java.util.TreeMap;
  */
 
 public class ToneAnalyzer {
-    private static final double CONSTANT = Math.pow(2,-12);
+    private static final double CONSTANT = 1.059463; // 2^-12
     private double BASE_FREQ;
     private TreeMap<Double, String> tones;
     //It is important that C is fisrt in this array as i will assume that in further calculations.
@@ -33,7 +33,7 @@ public class ToneAnalyzer {
         for(int i = -SEMITONES_BELOW_A4 ; i <=SEMITONES_ABOVE_A4 ; i++){
             String name = toneNames[toneIndex] + octaveIndex;
             double freq = BASE_FREQ * Math.pow(CONSTANT, i);
-            Log.d("new sound: ", name + freq);
+            Log.d("new sound: ", name +" "+ freq);
             tones.put(freq, name);
             toneIndex++;
             if(toneIndex == toneNames.length){
@@ -43,9 +43,14 @@ public class ToneAnalyzer {
         }
     }
     String getNearestNoteAndDistance(double freq, DoublePointer distance) throws NullPointerException{
-        double ceilKey, floorKey;
-        ceilKey = tones.ceilingKey(freq);
-        floorKey = tones.floorKey(freq);
+        double ceilKey=0, floorKey=0;
+        try {
+            ceilKey = tones.ceilingKey(freq);
+            floorKey = tones.floorKey(freq);
+        } catch (NullPointerException e) {
+            Log.e("getNearestNoteAndDi", "null ptr exception");
+            return "";
+        }
         if(freq - floorKey < ceilKey - freq){
             distance.setValue(floorKey - freq);
             return String.valueOf(tones.ceilingEntry(freq).getValue());

@@ -15,7 +15,7 @@ public class FrequencyRecogniser {
     private int SAMPLE_RATE = 44100;
     private int channelConfig = AudioFormat.CHANNEL_IN_MONO;
     private int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
-    private int bufferSizeInBytes = AudioRecord.getMinBufferSize(SAMPLE_RATE, channelConfig, audioFormat) * 5;
+    private int bufferSizeInBytes = AudioRecord.getMinBufferSize(SAMPLE_RATE, channelConfig, audioFormat) * 16;
     @NonNull
     private DoublePointer frequency;
 
@@ -49,7 +49,8 @@ public class FrequencyRecogniser {
     }
 
     public void stopListening() {
-        record.stop();
+        if(record != null)
+            record.stop();
         //need to init befroe listening again
     }
 
