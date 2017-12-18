@@ -18,7 +18,8 @@ class DoublePointer {
 
     public void setValue(double val){
         value = val;
-        onValueChangedListener.valueChanged(value);
+        if(onValueChangedListener != null)
+            onValueChangedListener.valueChanged(value);
     }
 
    public interface OnValueChangedListener {

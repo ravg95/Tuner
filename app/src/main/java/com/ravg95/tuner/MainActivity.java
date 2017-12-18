@@ -1,12 +1,10 @@
 package com.ravg95.tuner;
 
-import android.media.audiofx.Visualizer;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -43,7 +41,9 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
 
     @Override
     public void valueChanged(double newValue) {
-        textView.setText(new String(newValue+"Hz"));
+        DoublePointer distance = new DoublePointer(0, null);
+        String note = toneAnalyzer.getNearestNoteAndDistance(newValue, distance);
+        textView.setText("Note: "+ note+"\ndistance: "+ distance);
     }
 
     private class DelayedStart extends TimerTask {

@@ -42,8 +42,16 @@ public class ToneAnalyzer {
             }
         }
     }
-    String getNearestNoteAndDistance(DoublePointer freq){
-        
-        return "";
+    String getNearestNoteAndDistance(double freq, DoublePointer distance){
+        double ceilKey, floorKey;
+        ceilKey = tones.ceilingKey(freq);
+        floorKey = tones.floorKey(freq);
+        if(freq - floorKey < ceilKey - freq){
+            distance.setValue(floorKey - freq);
+            return String.valueOf(tones.floorEntry(freq));
+        }  else {
+            distance.setValue(ceilKey - freq);
+            return String.valueOf(tones.ceilingEntry(freq));
+        }
     }
 }
