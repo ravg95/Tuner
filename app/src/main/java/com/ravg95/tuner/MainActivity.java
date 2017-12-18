@@ -14,6 +14,7 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
 
     private TextView textView;
     private FrequencyRecogniser frequencyRecogniser;
+    private ToneAnalyzer toneAnalyzer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +22,8 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
         setContentView(R.layout.activity_main);
         textView = (TextView) findViewById(R.id.textView);
         frequencyRecogniser = new FrequencyRecogniser(new DoublePointer(0, this));
+        toneAnalyzer = new ToneAnalyzer();
+        toneAnalyzer.init();
     }
 
     @Override
