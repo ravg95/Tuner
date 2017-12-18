@@ -27,7 +27,7 @@ public class ToneAnalyzer {
         initialized = true;
     }
 
-    private void generateToneTree(){
+    private void generateToneTree(){ //do poprawy
         int octaveIndex = 0;
         int toneIndex  = 0;
         for(int i = -SEMITONES_BELOW_A4 ; i <=SEMITONES_ABOVE_A4 ; i++){
@@ -42,16 +42,16 @@ public class ToneAnalyzer {
             }
         }
     }
-    String getNearestNoteAndDistance(double freq, DoublePointer distance){
+    String getNearestNoteAndDistance(double freq, DoublePointer distance) throws NullPointerException{
         double ceilKey, floorKey;
         ceilKey = tones.ceilingKey(freq);
         floorKey = tones.floorKey(freq);
         if(freq - floorKey < ceilKey - freq){
             distance.setValue(floorKey - freq);
-            return String.valueOf(tones.floorEntry(freq));
+            return String.valueOf(tones.ceilingEntry(freq).getValue());
         }  else {
             distance.setValue(ceilKey - freq);
-            return String.valueOf(tones.ceilingEntry(freq));
+            return String.valueOf(tones.floorEntry(freq).getValue());
         }
     }
 }

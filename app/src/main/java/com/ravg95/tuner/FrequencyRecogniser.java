@@ -15,7 +15,7 @@ public class FrequencyRecogniser {
     private int SAMPLE_RATE = 44100;
     private int channelConfig = AudioFormat.CHANNEL_IN_MONO;
     private int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
-    private int bufferSizeInBytes = AudioRecord.getMinBufferSize(SAMPLE_RATE, channelConfig, audioFormat);
+    private int bufferSizeInBytes = AudioRecord.getMinBufferSize(SAMPLE_RATE, channelConfig, audioFormat) * 5;
     @NonNull
     private DoublePointer frequency;
 
@@ -54,6 +54,7 @@ public class FrequencyRecogniser {
     }
 
     private double analyze(short[] buffer, int readBytes) {
+        readBytes = findPowerOf2(readBytes);
         FFT fft = new FFT(readBytes);
         double[] re = new double[readBytes];
         double[] im = new double[readBytes];
@@ -72,6 +73,11 @@ public class FrequencyRecogniser {
             }
         }
         return indexOfHihgestPeak * SAMPLE_RATE / readBytes;
+    }
+
+    private int findPowerOf2(int n) {
+        int exponent = (int) Math.floor (Math.log(n)/Math.log(2));
+        return (int) Math.pow(2,exponent);
     }
 
 }
