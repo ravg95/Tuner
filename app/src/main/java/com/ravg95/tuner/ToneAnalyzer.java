@@ -27,7 +27,7 @@ public class ToneAnalyzer {
         initialized = true;
     }
 
-    private void generateToneTree(){ //do poprawy
+    private void generateToneTree(){
         int octaveIndex = 0;
         int toneIndex  = 0;
         for(int i = -SEMITONES_BELOW_A4 ; i <=SEMITONES_ABOVE_A4 ; i++){

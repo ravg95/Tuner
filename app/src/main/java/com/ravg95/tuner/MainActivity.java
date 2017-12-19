@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
     private TextView distView;
     private FrequencyRecogniser frequencyRecogniser;
     private ToneAnalyzer toneAnalyzer;
+    ListenThread listenThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,14 +35,15 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
     protected void onResume() {
         super.onResume();
         Timer t = new Timer();
-        TimerTask tt = new DelayedStart();
-        t.schedule(tt, 2000);
+        listenThread = new ListenThread();
+        t.schedule(listenThread, 2000);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         frequencyRecogniser.stopListening();
+        listenThread.cancel();
     }
 
 
@@ -51,11 +54,11 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
             @Override
             public void run() {
 
-                freqView.setText(newValue + "Hz");
+                freqView.setText(String.format(Locale.getDefault(), " %.1f Hz",newValue));
                 DoublePointer distance = new DoublePointer(0, null);
                 String note = toneAnalyzer.getNearestNoteAndDistance(newValue, distance);
                 toneView.setText(note);
-                distView.setText(distance.getValue()+ "Hz");
+                distView.setText(String.format(Locale.getDefault(), " %.1f Hz", distance.getValue()));
                 Log.d("value changed sound","Note: " + note + "\ndistance: " + distance.getValue());
 
             }
@@ -63,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
 
     }
 
-    private class DelayedStart extends TimerTask {
+    private class ListenThread extends TimerTask {
 
         @Override
         public void run() {
