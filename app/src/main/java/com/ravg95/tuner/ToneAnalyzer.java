@@ -42,21 +42,10 @@ public class ToneAnalyzer {
             }
         }
     }
-    String getNearestNoteAndDistance(double freq, DoublePointer distance) throws NullPointerException{
-        double ceilKey=0, floorKey=0;
-        try {
-            ceilKey = tones.ceilingKey(freq);
-            floorKey = tones.floorKey(freq);
-        } catch (NullPointerException e) {
-            Log.e("getNearestNoteAndDi", "null ptr exception");
-            return "";
-        }
-        if(freq - floorKey < ceilKey - freq){
-            distance.setValue(floorKey - freq);
-            return String.valueOf(tones.ceilingEntry(freq).getValue());
-        }  else {
-            distance.setValue(ceilKey - freq);
-            return String.valueOf(tones.floorEntry(freq).getValue());
-        }
+    String getNearestNoteAndDistance(double freq, DoublePointer distance){
+        double semitones = Math.log(freq/BASE_FREQ) / Math.log(CONSTANT);
+        double roundSemitones = Math.round(semitones);
+
+        return "";
     }
 }
