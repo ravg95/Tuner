@@ -9,7 +9,7 @@ import java.util.Optional;
 public class Settings {
 
     static double getBaseFreq(){
-        double readFreq = 432;
+        double readFreq = 440;
         return readFreq;
     }
 }
