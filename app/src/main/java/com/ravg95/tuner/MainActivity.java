@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
         distView = (TextView) findViewById(R.id.dist);
         frequencyRecogniser = new FrequencyRecogniser(new DoublePointer(0, this));
         toneAnalyzer = new ToneAnalyzer();
-        toneAnalyzer.init();
     }
 
     @Override
@@ -56,7 +55,12 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
 
                 freqView.setText(String.format(Locale.getDefault(), " %.1f Hz",newValue));
                 DoublePointer distance = new DoublePointer(0, null);
-                String note = toneAnalyzer.getNearestNoteAndDistance(newValue, distance);
+                String note;
+                try {
+                    note = toneAnalyzer.getNearestNoteAndDistance(newValue, distance);
+                } catch (ToneAnalyzer.NoteOutOfBoundsException e){
+                    note = "N/A";
+                }
                 toneView.setText(note);
                 distView.setText(String.format(Locale.getDefault(), " %.1f Hz", distance.getValue()));
                 Log.d("value changed sound","Note: " + note + "\ndistance: " + distance.getValue());

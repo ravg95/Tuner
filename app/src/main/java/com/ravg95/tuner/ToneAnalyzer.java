@@ -11,7 +11,8 @@ import java.util.TreeMap;
 
 public class ToneAnalyzer {
     private static final double CONSTANT = 1.059463; // 2^-12
-    private double BASE_FREQ;
+    private double BASE_FREQ = Settings.getBaseFreq();
+    ;
     private TreeMap<Double, String> tones;
     //It is important that C is fisrt in this array as i will assume that in further calculations.
     public final String[] toneNames = {"C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"};
@@ -20,32 +21,31 @@ public class ToneAnalyzer {
     private final int SEMITONES_BELOW_A4 = 57;
 
 
-    public void init(){
-        BASE_FREQ = Settings.getBaseFreq();
-        tones = new TreeMap<>();
-        generateToneTree();
-        initialized = true;
-    }
-
-    private void generateToneTree(){
-        int octaveIndex = 0;
-        int toneIndex  = 0;
-        for(int i = -SEMITONES_BELOW_A4 ; i <=SEMITONES_ABOVE_A4 ; i++){
-            String name = toneNames[toneIndex] + octaveIndex;
-            double freq = BASE_FREQ * Math.pow(CONSTANT, i);
-            Log.d("new sound: ", name +" "+ freq);
-            tones.put(freq, name);
-            toneIndex++;
-            if(toneIndex == toneNames.length){
-                toneIndex = 0;
-                octaveIndex++;
-            }
-        }
-    }
-    String getNearestNoteAndDistance(double freq, DoublePointer distance){
-        double semitones = Math.log(freq/BASE_FREQ) / Math.log(CONSTANT);
+    String getNearestNoteAndDistance(double freq, DoublePointer distance) throws NoteOutOfBoundsException {
+        double semitones = Math.log(freq / BASE_FREQ) / Math.log(CONSTANT);
         double roundSemitones = Math.round(semitones);
+        double cents = semitones - roundSemitones;
+        if (cents > 50) {
+            cents = cents - 100;
+            roundSemitones++;
+        } else if (cents < -50) {
+            cents = cents + 100;
+            roundSemitones--;
+        }
+        distance.setValue(cents);
+        return getNameForSemitones((int) roundSemitones);
+    }
 
-        return "";
+    private String getNameForSemitones(int semitones) throws NoteOutOfBoundsException {
+        if (semitones < -SEMITONES_BELOW_A4 || semitones > SEMITONES_ABOVE_A4)
+            throw new NoteOutOfBoundsException();
+        int indexOfA = 9;
+        int toneIndex = (indexOfA + semitones) % toneNames.length;
+        int octaveIndex = (indexOfA + 4 * toneNames.length + semitones) / 12;
+
+        return toneNames[toneIndex]+""+octaveIndex;
+    }
+
+    class NoteOutOfBoundsException extends Throwable {
     }
 }
