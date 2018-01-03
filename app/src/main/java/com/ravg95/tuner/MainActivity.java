@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
     protected void onResume() {
         super.onResume();
         Timer t = new Timer();
-        listenThread = new ListenThread(new DoublePointer(0, this)); // TODO: for testing purpose. remove argument and constructor afterwards
+        listenThread = new ListenThread();
         t.schedule(listenThread, 2000, 7000);
     }
 
@@ -71,18 +71,10 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
     }
 
     private class ListenThread extends TimerTask {
-        DoublePointer b;
-        int w = 0;
-        public ListenThread(DoublePointer dp){
-            b = dp;
-        }
-        double[] freqs = {27.5, 28, 261.63, 261, 440, 432.756, 882, 880};
         @Override
         public void run() {
-            if(w >= freqs.length) return;
-            b.setValue(freqs[w]);
-            w++;
-
+            frequencyRecogniser.init();
+            frequencyRecogniser.listen();
         }
     }
 

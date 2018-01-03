@@ -42,7 +42,7 @@ public class ToneAnalyzer {
         int indexOfA = 9;
         int toneIndex = (indexOfA + semitones) % toneNames.length;
         int octaveIndex = (indexOfA + 4 * toneNames.length + semitones) / 12;
-
+        if(toneIndex < 0 ) toneIndex += 12;
         return toneNames[toneIndex]+""+octaveIndex;
     }
 
