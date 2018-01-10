@@ -4,6 +4,7 @@ package com.ravg95.tuner;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import java.util.Locale;
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
     private FrequencyRecogniser frequencyRecogniser;
     private ToneAnalyzer toneAnalyzer;
     ListenThread listenThread;
+    private CanvasView customCanvas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
         toneView = (TextView) findViewById(R.id.tone);
         distView = (TextView) findViewById(R.id.dist);
         frequencyRecogniser = new FrequencyRecogniser(new DoublePointer(0, this));
+        customCanvas = (CanvasView) findViewById(R.id.my_canvas);
         toneAnalyzer = new ToneAnalyzer();
     }
 
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
         frequencyRecogniser.stopListening();
         listenThread.cancel();
     }
+
 
 
     @Override
@@ -68,6 +72,10 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
             }
         });
 
+    }
+
+    public void clearCanvas(View v) {
+        customCanvas.clearCanvas();
     }
 
     private class ListenThread extends TimerTask {
