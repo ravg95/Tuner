@@ -13,9 +13,9 @@ import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements DoublePointer.OnValueChangedListener {
 
-    private TextView freqView;
-    private TextView toneView;
-    private TextView distView;
+  //  private TextView freqView;
+   // private TextView toneView;
+   // private TextView distView;
     private FrequencyRecogniser frequencyRecogniser;
     private ToneAnalyzer toneAnalyzer;
     ListenThread listenThread;
@@ -25,9 +25,9 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        freqView = (TextView) findViewById(R.id.freq);
-        toneView = (TextView) findViewById(R.id.tone);
-        distView = (TextView) findViewById(R.id.dist);
+      //  freqView = (TextView) findViewById(R.id.freq);
+      //  toneView = (TextView) findViewById(R.id.tone);
+      //  distView = (TextView) findViewById(R.id.dist);
         frequencyRecogniser = new FrequencyRecogniser(new DoublePointer(0, this));
         customCanvas = (CanvasView) findViewById(R.id.my_canvas);
         toneAnalyzer = new ToneAnalyzer();
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
             @Override
             public void run() {
 
-                freqView.setText(String.format(Locale.getDefault(), " %.1f Hz",newValue));
+
                 DoublePointer distance = new DoublePointer(0, null);
                 String note;
                 try {
@@ -65,18 +65,16 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
                 } catch (ToneAnalyzer.NoteOutOfBoundsException e){
                     note = "N/A";
                 }
-                toneView.setText(note);
-                distView.setText(String.format(Locale.getDefault(), " %.1f Hz", distance.getValue()));
+
                 Log.d("value changed sound","Note: " + note + "\ndistance: " + distance.getValue());
+                customCanvas.setPitchProperties(note, String.format(Locale.getDefault(), " %.1f Hz",newValue),String.format(Locale.getDefault(), " %.1f Hz", distance.getValue()));
+                customCanvas.refreshDrawableState();
 
             }
         });
 
     }
 
-    public void clearCanvas(View v) {
-        customCanvas.clearCanvas();
-    }
 
     private class ListenThread extends TimerTask {
         @Override

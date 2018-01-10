@@ -13,7 +13,7 @@ public class ToneAnalyzerTest {
     @Test
     public void toneNames_is_correct() throws Exception {
         ToneAnalyzer analyzer = new ToneAnalyzer();
-        String[] names = {"A0", "A0", "C4", "C4", "A3", "A4", "A5", "A5", "A6"};
+        String[] names = {"A0", "A0", "C4", "C4", "A4", "A4", "A5", "A5", "A6"};
         double[] vals = {27.5, 28, 261.63, 261, 440, 432.756, 882, 880, 1789};
         for(int i = 0; i < vals.length && i < names.length; i++){
             String name;
