@@ -12,4 +12,8 @@ public class Settings {
         double readFreq = 440;
         return readFreq;
     }
+
+    public static int getToleranceInCents() {
+        return 5;
+    }
 }

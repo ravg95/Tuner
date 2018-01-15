@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
                 }
 
                 Log.d("value changed sound","Note: " + note + "\ndistance: " + distance.getValue());
-                customCanvas.setPitchProperties(note, String.format(Locale.getDefault(), " %.1f Hz",newValue),String.format(Locale.getDefault(), " %.1f Hz", distance.getValue()));
-                customCanvas.refreshDrawableState();
+                customCanvas.setPitchProperties(note, String.format(Locale.getDefault(), " %.1f Hz",newValue), distance.getValue());
+                customCanvas.invalidate();
 
             }
         });

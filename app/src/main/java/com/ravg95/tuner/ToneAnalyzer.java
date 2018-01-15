@@ -24,7 +24,7 @@ public class ToneAnalyzer {
     String getNearestNoteAndDistance(double freq, DoublePointer distance) throws NoteOutOfBoundsException {
         double semitones = Math.log(freq / BASE_FREQ) / Math.log(CONSTANT);
         double roundSemitones = Math.round(semitones);
-        double cents = semitones - roundSemitones;
+        double cents = (semitones - roundSemitones)*100;
         if (cents > 50) {
             cents = cents - 100;
             roundSemitones++;
