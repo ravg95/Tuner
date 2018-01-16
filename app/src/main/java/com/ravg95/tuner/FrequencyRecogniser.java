@@ -19,7 +19,7 @@ public class FrequencyRecogniser {
     private int SAMPLE_RATE = 44100;
     private int channelConfig = AudioFormat.CHANNEL_IN_MONO;
     private int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
-    private int bufferSizeInBytes = findFloorPowerOf2(AudioRecord.getMinBufferSize(SAMPLE_RATE, channelConfig, audioFormat) * 2);
+    private int bufferSizeInBytes = findFloorPowerOf2(AudioRecord.getMinBufferSize(SAMPLE_RATE, channelConfig, audioFormat) * 8);
     @NonNull
     private DoublePointer frequency;
 
@@ -59,7 +59,7 @@ public class FrequencyRecogniser {
     }
 
     public void stopListening() {
-        if(record != null)
+        if (record != null)
             record.stop();
         //need to init befroe listening again
     }
@@ -69,11 +69,49 @@ public class FrequencyRecogniser {
         FFT fft = new FFT(readBytes);
         double[] re = new double[readBytes];
         double[] im = new double[readBytes];
-        for(int i=0; i<readBytes; i++){  // fill re and im arrays and apply window.
+        for (int i = 0; i < readBytes; i++) {  // fill re and im arrays and apply window.
             re[i] = (double) buffer[i] * window(i, readBytes);
             im[i] = 0;
         }
         fft.fft(re, im);
+        //Downsampling for HSS
+        double[] re2 = new double[readBytes/2];
+        double[] re3 = new double[readBytes/3];
+        double[] re4 = new double[readBytes/4];
+        double[] re5 = new double[readBytes/5];
+        double[] im2 = new double[readBytes/2];
+        double[] im3 = new double[readBytes/3];
+        double[] im4 = new double[readBytes/4];
+        double[] im5 = new double[readBytes/5];
+        for(int i = 0; i < readBytes/2 ; i++){
+            re2[i] = re[2*i] ;
+            im2[i] = im[2*i];
+        }
+        for(int i = 0; i < readBytes/3 ; i++){
+
+                re3[i] = re[3*i];
+                im3[i] = im[3*i];
+
+        }
+        for(int i = 0; i < readBytes/4 ; i++){
+                re4[i] = re[4 * i];
+                im4[i] = im[4 * i];
+        }
+        for(int i = 0; i < readBytes/5 ; i++){
+            re5[i] = re[5 * i];
+            im5[i] = im[5 * i];
+        }
+        //HSS
+        for(int i = 0 ; i < readBytes ; i++){
+            if(i < readBytes/2){
+                re [ i ] += re2[i];
+                im [ i ] += im2[i];
+            }
+            if(i < readBytes/3){
+                re [ i ] += re3[i];
+                im [ i ] += im3[i];
+            }
+        }
         double highestPeak = 0;
         int indexOfHihgestPeak=0;
         for(int i=0; i<readBytes; i++) {
@@ -91,14 +129,14 @@ public class FrequencyRecogniser {
     }
 
     private int findFloorPowerOf2(int n) {
-        int exponent = (int) Math.floor (Math.log(n)/Math.log(2));
-        return (int) Math.pow(2,exponent);
+        int exponent = (int) Math.floor(Math.log(n) / Math.log(2));
+        return (int) Math.pow(2, exponent);
     }
 
-    public double window(double n, int N){
-        return 1; //square window
-        // Hann window
-       // return (1 - Math.cos((2*Math.PI*n)/(N-1)))/2.0;
+    public double window(double n, int N) {
+         //return 1; //square window
+        // Hanning window
+        return 0.5 + 0.5 * Math.cos((2 * n * Math.PI) / N);
     }
     private class LowPeakException extends Exception{}
     private class FrequencyOutOfExpectedRangeException extends  Exception {}
