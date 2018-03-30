@@ -5,16 +5,17 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.PorterDuff;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 
 public class CanvasView extends View {
 
+    private final float CIRCLE_CX = (float) 225;
+    private final float CIRCLE_CY = (float) 325;
+    private final float CIRCLE_R1 = 100;
+    private final float CIRCLE_R2 = 150;
+    private final float CIRCLE_BAR_MARGIN = 10;
     private String freq = "440Hz";
     private double dist = 0;
     private String note = "A4";
@@ -42,6 +43,9 @@ public class CanvasView extends View {
     }
 
     // override onDraw
+
+    String lastNote;
+    double angle;
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -59,6 +63,24 @@ public class CanvasView extends View {
         canvas.drawArc(new RectF(10, 300, getWidth() - 10, 700), -135, 90, true, paint);
         canvas.drawArc(new RectF(10, 300, getWidth() - 10, 700), (float)(-135 + 90*(dist + 50)/100),(float)( 90 - 90*(dist + 50)/100), true, paint);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        if(lastNote == null || !lastNote.equals(note)){
+            lastNote = note;
+            angle = 0;
+        }   else {
+            angle+=(dist*10.0);
+        }
+        //draw the rotating circle
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(Color.GRAY);
+        canvas.drawCircle(CIRCLE_CX, CIRCLE_CY, CIRCLE_R1, paint);
+        canvas.drawCircle(CIRCLE_CX, CIRCLE_CY, CIRCLE_R2, paint);
+        for(int i=0; i < 360 ; i+= 10){
+            float x1 = (float) ((CIRCLE_R1 + CIRCLE_BAR_MARGIN)*Math.sin(Math.PI*(angle+i)/180)) + CIRCLE_CX;
+            float y1 = (float) ((CIRCLE_R1 + CIRCLE_BAR_MARGIN)*Math.cos(Math.PI*(angle+i)/180)) + CIRCLE_CY;
+            float x2 = (float) ((CIRCLE_R2 - CIRCLE_BAR_MARGIN)*Math.sin(Math.PI*(angle+i)/180)) + CIRCLE_CX;
+            float y2 = (float) ((CIRCLE_R2 - CIRCLE_BAR_MARGIN)*Math.cos(Math.PI*(angle+i)/180)) + CIRCLE_CY;
+            canvas.drawLine(x1,y1,x2,y2,paint);
+        }
     }
 
     public void setPitchProperties(String note, String freq, double dist) {

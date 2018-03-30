@@ -68,7 +68,10 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
 
                 Log.d("value changed sound","Note: " + note + "\ndistance: " + distance.getValue());
                 customCanvas.setPitchProperties(note, String.format(Locale.getDefault(), " %.1f Hz",newValue), distance.getValue());
-                customCanvas.invalidate();
+
+                Timer t = new Timer();
+                AnimationThread animationThread = new AnimationThread();
+                t.schedule(animationThread, 0, 700);
 
             }
         });
@@ -81,6 +84,19 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
         public void run() {
             frequencyRecogniser.init();
             frequencyRecogniser.listen();
+        }
+    }
+
+    private class AnimationThread extends TimerTask {
+        @Override
+        public void run() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    customCanvas.invalidate();
+                }
+            });
+            //TODO::stop condition
         }
     }
 
