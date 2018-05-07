@@ -9,13 +9,8 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
-public class CanvasView extends View {
+public class GaugeView extends View {
 
-    private final float CIRCLE_CX = (float) 225;
-    private final float CIRCLE_CY = (float) 325;
-    private final float CIRCLE_R1 = 100;
-    private final float CIRCLE_R2 = 150;
-    private final float CIRCLE_BAR_MARGIN = 10;
     private String freq = "440Hz";
     private double dist = 0;
     private String note = "A4";
@@ -24,7 +19,7 @@ public class CanvasView extends View {
     private Paint paint;
     Context context;
 
-    public CanvasView(Context c, AttributeSet attrs) {
+    public GaugeView(Context c, AttributeSet attrs) {
         super(c, attrs);
         context = c;
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -49,25 +44,30 @@ public class CanvasView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        float CIRCLE_CX = (float) (getWidth()/2.0);
+        float CIRCLE_CY = (float) 150 + CIRCLE_CX;
+        float CIRCLE_R1 = (float) (getWidth()/2.0) - 50;
+        float CIRCLE_R2 = CIRCLE_R1 + 40;
+        float CIRCLE_BAR_MARGIN = 10;
         canvas.drawColor(Color.BLACK);
         paint.setColor(Color.WHITE);
         paint.setTextSize(80);
         canvas.drawText(note, getWidth()/2 - 40, 70,  paint);
         paint.setTextSize(40);
         canvas.drawText(freq, getWidth()/2 - 20, 120,  paint);
-        canvas.drawArc(new RectF(10, 300, getWidth() - 10, 700), -135, 90, true, paint);
+        canvas.drawArc(new RectF(50, 200, getWidth() - 50, 100 + getWidth()), -135, 90, true, paint);
         //arc in arc to represent distnce
         paint.setStyle(Paint.Style.STROKE);
         if(dist<-Settings.getToleranceInCents() || dist>Settings.getToleranceInCents()) paint.setColor(Color.RED);
         else paint.setColor(Color.GREEN);
-        canvas.drawArc(new RectF(10, 300, getWidth() - 10, 700), -135, 90, true, paint);
-        canvas.drawArc(new RectF(10, 300, getWidth() - 10, 700), (float)(-135 + 90*(dist + 50)/100),(float)( 90 - 90*(dist + 50)/100), true, paint);
+        canvas.drawArc(new RectF(50, 200, getWidth() - 50, 100 + getWidth()), -135, 90, true, paint);
+        canvas.drawArc(new RectF(50, 200, getWidth() - 50, 100 + getWidth()), (float)(-135 + 90*(dist + 50)/100),(float)( 90 - 90*(dist + 50)/100), true, paint);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         if(lastNote == null || !lastNote.equals(note)){
             lastNote = note;
             angle = 0;
         }   else {
-            angle+=(dist*10.0);
+            angle+=(dist);
         }
         //draw the rotating circle
         paint.setStyle(Paint.Style.STROKE);
