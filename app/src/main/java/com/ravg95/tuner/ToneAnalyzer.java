@@ -16,9 +16,6 @@ public class ToneAnalyzer {
     private TreeMap<Double, String> tones;
     //It is important that C is fisrt in this array as i will assume that in further calculations.
     public final String[] toneNames = {"C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"};
-    private static boolean initialized = false;
-    private final int SEMITONES_ABOVE_A4 = 50;
-    private final int SEMITONES_BELOW_A4 = 57;
 
 
     String getNearestNoteAndDistance(double freq, DoublePointer distance) throws NoteOutOfBoundsException {
@@ -36,9 +33,7 @@ public class ToneAnalyzer {
         return getNameForSemitones((int) roundSemitones);
     }
 
-    private String getNameForSemitones(int semitones) throws NoteOutOfBoundsException {
-        if (semitones < -SEMITONES_BELOW_A4 || semitones > SEMITONES_ABOVE_A4)
-            throw new NoteOutOfBoundsException();
+    private String getNameForSemitones(int semitones) {
         int indexOfA = 9;
         int toneIndex = (indexOfA + semitones) % toneNames.length;
         int octaveIndex = (indexOfA + 4 * toneNames.length + semitones) / 12;
