@@ -11,14 +11,16 @@ import android.util.AttributeSet;
  * Created by rafal on 16/05/2018.
  */
 
-public class GaugeView extends TunerView {
+public class StringView extends TunerView {
 
-    public GaugeView(Context c, AttributeSet attrs) {
+    public StringView(Context c, AttributeSet attrs) {
         super(c, attrs);
     }
 
     @Override
     protected void drawView(Canvas canvas) {
+        Preset currentPreset = Settings.getCurrentPreset();
+
         float CIRCLE_CX = (float) (getWidth()/2.0);
         float CIRCLE_CY = (float) 150 + CIRCLE_CX;
         float CIRCLE_R1 = (float) (getWidth()/2.0) - 50;
@@ -26,23 +28,26 @@ public class GaugeView extends TunerView {
         float CIRCLE_BAR_MARGIN = 10;
         canvas.drawColor(Color.BLACK);
         paint.setColor(Color.WHITE);
-        paint.setTextSize(80);
-        canvas.drawText(note, getWidth()/2 - 40, 70,  paint);
-        paint.setTextSize(40);
-        canvas.drawText(freq, getWidth()/2 - 20, 120,  paint);
-        canvas.drawArc(new RectF(50, 200, getWidth() - 50, 100 + getWidth()), -135, 90, true, paint);
-        //arc in arc to represent distnce
-        paint.setStyle(Paint.Style.STROKE);
-        if(dist<-Settings.getToleranceInCents() || dist>Settings.getToleranceInCents()) paint.setColor(Color.RED);
-        else paint.setColor(Color.GREEN);
-        canvas.drawArc(new RectF(50, 200, getWidth() - 50, 100 + getWidth()), -135, 90, true, paint);
-        canvas.drawArc(new RectF(50, 200, getWidth() - 50, 100 + getWidth()), (float)(-135 + 90*(dist + 50)/100),(float)( 90 - 90*(dist + 50)/100), true, paint);
+        paint.setTextSize(25);
+        canvas.drawText(currentPreset.name, getWidth()/2 - 6*currentPreset.name.length(), 90,  paint);
+        float stringDist = 2 * CIRCLE_R1 / (currentPreset.numOfStrings + 1);
+        for(int i=0; i < currentPreset.numOfStrings; i++){
+            float y = CIRCLE_CY - CIRCLE_R1 + (i + 1) * stringDist;
+            float relY = CIRCLE_R1 - (i + 1) * stringDist;
+            float x1, x2;
+            x1 = CIRCLE_CX - (float) Math.sqrt(CIRCLE_R1*CIRCLE_R1 - relY*relY);
+            x2 = CIRCLE_CX + (float) Math.sqrt(CIRCLE_R1*CIRCLE_R1 - relY*relY);
+            paint.setColor(Color.GRAY);
+            canvas.drawLine(x1, y, x2, y, paint);
+            canvas.drawText(currentPreset.strings[i], x1, y,  paint);
+
+        }
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
         if(lastNote == null || !lastNote.equals(note)){
             lastNote = note;
             angle = 0;
         }   else {
-            angle+=(dist);
+            angle+=(dist/10);
         }
         //draw the rotating circle
         paint.setStyle(Paint.Style.STROKE);

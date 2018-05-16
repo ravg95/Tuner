@@ -28,4 +28,23 @@ public class ToneAnalyzerTest {
         }
 
     }
+    @Test
+    public void getfreqforname_is_correct() throws Exception {
+        ToneAnalyzer analyzer = new ToneAnalyzer();
+        String[] names = {"A0", "A0", "C4", "C4", "A4", "A4", "A5", "A5", "A6"};
+        double[] vals = {27.5, 28, 261.63, 261, 440, 432.756, 882, 880, 1789};
+        for(int i = 0 ; i < names.length; i++){
+            double val;
+            try {
+                val = analyzer.getFrequencyFromNoteName(names[i]);
+                System.out.println("name: "+names[i]+" expected: "+vals[i]+" result: "+ val);
+            } catch (NumberFormatException e){
+                System.err.println("note out of bounds!! -- BAD, Very Bad");
+                continue;
+            }
+            assertEquals("tone names differ", vals[i], val);
+        }
+
+    }
+
 }

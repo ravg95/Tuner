@@ -1,6 +1,9 @@
 package com.ravg95.tuner;
 
 
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,18 +20,40 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
     private FrequencyRecogniser frequencyRecogniser;
     private ToneAnalyzer toneAnalyzer;
     ListenThread listenThread;
-    private GaugeView customCanvas;
+    private TunerView customCanvas;
+    CollectionPagerAdapter collectionPagerAdapter;
+    ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-      //  freqView = (TextView) findViewById(R.id.freq);
-      //  toneView = (TextView) findViewById(R.id.tone);
-      //  distView = (TextView) findViewById(R.id.dist);
         frequencyRecogniser = new FrequencyRecogniser(new DoublePointer(0, this));
-        customCanvas = (GaugeView) findViewById(R.id.my_canvas);
+
         toneAnalyzer = new ToneAnalyzer();
+        collectionPagerAdapter =
+                new CollectionPagerAdapter(
+                        getSupportFragmentManager());
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(collectionPagerAdapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                                              @Override
+                                              public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                                                  customCanvas = (TunerView) findViewById(R.id.my_canvas);
+                                              }
+
+                                              @Override
+                                              public void onPageSelected(int position) {
+                                                  customCanvas = (TunerView) findViewById(R.id.my_canvas);
+                                              }
+
+                                              @Override
+                                              public void onPageScrollStateChanged(int state) {
+                                                  customCanvas = (TunerView) findViewById(R.id.my_canvas);
+                                              }
+                                          }
+
+        );
     }
 
     @Override
@@ -91,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    customCanvas.invalidate();
+                   // customCanvas.invalidate();
                 }
             });
             //TODO::stop condition

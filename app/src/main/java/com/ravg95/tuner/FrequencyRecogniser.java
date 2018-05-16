@@ -15,7 +15,7 @@ public class FrequencyRecogniser {
     private static final double QUALITY_THRESHOLD = 0.6;
     private AudioRecord record;
     private int audioSource = MediaRecorder.AudioSource.MIC;
-    private int SAMPLE_RATE = 2*44100;
+    private int SAMPLE_RATE = 44100;
     private int channelConfig = AudioFormat.CHANNEL_IN_MONO;
     private int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
     private int bufferSizeInBytes = findFloorPowerOf2(AudioRecord.getMinBufferSize(SAMPLE_RATE, channelConfig, audioFormat)*16);

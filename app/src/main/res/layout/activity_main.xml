@@ -7,11 +7,20 @@
     android:background="#FFFFFF"
     android:orientation="vertical" >
 
-    <com.ravg95.tuner.GaugeView
-        android:id="@+id/my_canvas"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textColor="#ffffff"
-        />
+        android:layout_height="match_parent" />
+
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:src="@drawable/images"
+        app:backgroundTint="#666666"
+        android:layout_margin="4dp" />
 
 </FrameLayout>
