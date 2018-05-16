@@ -27,7 +27,7 @@ class CollectionPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 100;
+        return 2;
     }
 
     @Override

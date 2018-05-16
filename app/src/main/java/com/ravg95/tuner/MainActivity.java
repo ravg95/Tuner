@@ -28,32 +28,16 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().hide();
         frequencyRecogniser = new FrequencyRecogniser(new DoublePointer(0, this));
-
+        customCanvas = (TunerView) findViewById(R.id.my_canvas);
         toneAnalyzer = new ToneAnalyzer();
         collectionPagerAdapter =
                 new CollectionPagerAdapter(
                         getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(collectionPagerAdapter);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                                              @Override
-                                              public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                                                  customCanvas = (TunerView) findViewById(R.id.my_canvas);
-                                              }
 
-                                              @Override
-                                              public void onPageSelected(int position) {
-                                                  customCanvas = (TunerView) findViewById(R.id.my_canvas);
-                                              }
-
-                                              @Override
-                                              public void onPageScrollStateChanged(int state) {
-                                                  customCanvas = (TunerView) findViewById(R.id.my_canvas);
-                                              }
-                                          }
-
-        );
     }
 
     @Override
@@ -90,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
                 }
 
                 Log.d("value changed sound","Note: " + note + "\ndistance: " + distance.getValue());
+                customCanvas = (TunerView) findViewById(R.id.my_canvas);
                 customCanvas.setPitchProperties(note, String.format(Locale.getDefault(), " %.1f Hz",newValue), distance.getValue());
 
                 Timer t = new Timer();
@@ -116,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements DoublePointer.OnV
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                   // customCanvas.invalidate();
+                    customCanvas.invalidate();
                 }
             });
             //TODO::stop condition
