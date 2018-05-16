@@ -14,7 +14,7 @@ public class FrequencyRecogniser {
     private static final double AMPLITUDE_THRESHOLD = 30000;
     private static final double QUALITY_THRESHOLD = 0.6;
     private AudioRecord record;
-    private int audioSource = MediaRecorder.AudioSource.MIC;
+    private int audioSource = MediaRecorder.AudioSource.DEFAULT;
     private int SAMPLE_RATE = 44100;
     private int channelConfig = AudioFormat.CHANNEL_IN_MONO;
     private int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
