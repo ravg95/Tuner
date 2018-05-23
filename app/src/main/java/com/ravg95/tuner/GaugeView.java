@@ -42,7 +42,7 @@ public class GaugeView extends TunerView {
             lastNote = note;
             angle = 0;
         }   else {
-            angle+=(dist);
+            angle+=(dist)/10;
         }
         //draw the rotating circle
         paint.setStyle(Paint.Style.STROKE);

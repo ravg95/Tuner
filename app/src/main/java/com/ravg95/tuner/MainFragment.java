@@ -36,11 +36,11 @@ public class MainFragment extends Fragment implements CanvasController{
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                refreshCanvas();
             }
 
             @Override
             public void onPageSelected(int position) {
+                customCanvas = (TunerView) viewPager.getChildAt(viewPager.getCurrentItem()).findViewById(R.id.my_canvas);
 
             }
 
@@ -67,7 +67,8 @@ public class MainFragment extends Fragment implements CanvasController{
     }
 
     public void refreshCanvas() {
-        customCanvas = (TunerView) getView().findViewById(R.id.my_canvas);
+
+        customCanvas = (TunerView) viewPager.getChildAt(viewPager.getCurrentItem()).findViewById(R.id.my_canvas);
     }
 
     public void setPitchProperties(String note, String format, double value) {

@@ -12,12 +12,12 @@ import java.util.TreeMap;
 
 public class ToneAnalyzer {
     private static final double CONSTANT = 1.059463; // 2^-12
-    private double BASE_FREQ = Settings.getBaseFreq();
+    private static final double BASE_FREQ = Settings.getBaseFreq();
     ;
     private TreeMap<Double, String> tones;
     //It is important that C is fisrt in this array as i will assume that in further calculations.
-    public final String[] toneNames = {"C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"};
-    private final int indexOfA = 9;
+    public static final String[] toneNames = {"C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"};
+    private static final int indexOfA = 9;
 
     String getNearestNoteAndDistance(double freq, DoublePointer distance) throws NoteOutOfBoundsException {
         double semitones = Math.log(freq / BASE_FREQ) / Math.log(CONSTANT);
@@ -42,9 +42,9 @@ public class ToneAnalyzer {
         return toneNames[toneIndex]+""+octaveIndex;
     }
 
-    public double getFrequencyFromNoteName(String name){
+    public static int getSemitonesFromNoteName(String name){
         String tone = name.charAt(0)+"";
-        int octave = Integer.parseInt(name);
+        int octave = name.charAt(name.length()-1) - '0';
         Log.d("note to freq:","tone: "+tone + " octave: "+ octave);
         int toneIndex = Arrays.binarySearch(toneNames,tone);
         int semitones = 12*octave - indexOfA - 4*toneNames.length;
@@ -55,8 +55,10 @@ public class ToneAnalyzer {
         } else if(octave>4 || (octave == 4 && distT < 0)) {
             semitones -= distT;
         }
-        return BASE_FREQ * Math.pow(CONSTANT,semitones);
+        return semitones;
     }
+
+
 
     class NoteOutOfBoundsException extends Throwable {
     }
