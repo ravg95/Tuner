@@ -14,11 +14,12 @@ public class ListeningController  implements DoublePointer.OnValueChangedListene
     private FrequencyRecogniser frequencyRecogniser;
     private ToneAnalyzer toneAnalyzer;
     private ListenThread listenThread;
-    private MainActivity parentView;
-    public ListeningController(MainActivity view){
+    private CanvasController canvasController;
+    private AnimationThread animationThread;
+    public ListeningController(CanvasController canvasController){
         frequencyRecogniser = new FrequencyRecogniser(new DoublePointer(0, this));
         toneAnalyzer = new ToneAnalyzer();
-        parentView = view;
+        this.canvasController = canvasController;
     }
 
     @Override
@@ -34,14 +35,8 @@ public class ListeningController  implements DoublePointer.OnValueChangedListene
                 }
 
                 Log.d("value changed sound","Note: " + note + "\ndistance: " + distance.getValue());
-                parentView.refreshCanvas();
-
-                parentView.setPitchProperties(note, String.format(Locale.getDefault(), " %.1f Hz",newValue), distance.getValue());
-
-                Timer t = new Timer();
-                AnimationThread animationThread = new AnimationThread();
-                t.schedule(animationThread, 0, 700);
-
+                canvasController.refreshCanvas();
+                canvasController.setPitchProperties(note, String.format(Locale.getDefault(), " %.1f Hz",newValue), distance.getValue());
             }
 
 
@@ -50,13 +45,15 @@ public class ListeningController  implements DoublePointer.OnValueChangedListene
     public void pause(){
 
         frequencyRecogniser.stopListening();
-        listenThread.cancel();
+        animationThread.cancel();
     }
 
     public void resume() {
         Timer t = new Timer();
         listenThread = new ListenThread();
-        t.schedule(listenThread, 2000, 7000);
+        t.schedule(listenThread, 2000);
+        animationThread = new AnimationThread();
+        t.schedule(animationThread, 2010, 70);
     }
 
     private class ListenThread extends TimerTask {
@@ -70,9 +67,7 @@ public class ListeningController  implements DoublePointer.OnValueChangedListene
     private class AnimationThread extends TimerTask {
         @Override
         public void run() {
-            parentView.invalidateCanvas();
-
-            //TODO::stop condition
+            canvasController.invalidateCanvas();
         }
     }
 }
