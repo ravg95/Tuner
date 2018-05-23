@@ -13,12 +13,15 @@ import lombok.NonNull;
 public class FrequencyRecogniser {
     private static final double AMPLITUDE_THRESHOLD = 30000;
     private static final double QUALITY_THRESHOLD = 0.6;
+    private static final double LOWEST_ACCEPTABLE_PEAK = 10000;
+    private static final double UPPER_BOUND_FREQUENCY = 7905;
+    private static final double LOWER_BOUND_FREQUENCY = 15;
     private AudioRecord record;
     private int audioSource = MediaRecorder.AudioSource.DEFAULT;
     private int SAMPLE_RATE = 44100;
     private int channelConfig = AudioFormat.CHANNEL_IN_MONO;
     private int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
-    private int bufferSizeInBytes = findFloorPowerOf2(AudioRecord.getMinBufferSize(SAMPLE_RATE, channelConfig, audioFormat)*16);
+    private int bufferSizeInBytes = findFloorPowerOf2(AudioRecord.getMinBufferSize(SAMPLE_RATE, channelConfig, audioFormat) * 16);
     @NonNull
     private DoublePointer frequency;
 
@@ -29,7 +32,7 @@ public class FrequencyRecogniser {
 
     public void init() {
         record = new AudioRecord(audioSource, SAMPLE_RATE, channelConfig, audioFormat, bufferSizeInBytes);
-        Log.d("buff size",""+AudioRecord.getMinBufferSize(SAMPLE_RATE, channelConfig, audioFormat));
+        Log.d("buff size", "" + AudioRecord.getMinBufferSize(SAMPLE_RATE, channelConfig, audioFormat));
     }
 
     public void listen() {
@@ -49,7 +52,11 @@ public class FrequencyRecogniser {
                     checkDataQuality(buffer, readBytes);
                     frequency.setValue(analyze(buffer, readBytes));
                 } catch (BadDataQualityException e) {
-                   Log.d("listen", "Bad signal quality");
+                    Log.d("listen", "Bad signal quality");
+                } catch (LowPeakException e) {
+                    Log.d("listen", "Low Peak exception caught");
+                } catch (FrequencyOutOfExpectedRangeException e) {
+                    Log.d("listen", "Frequency out of expected range exception caught");
                 }
 
             }
@@ -64,41 +71,42 @@ public class FrequencyRecogniser {
         int highestAmp = 0;
         Log.d("read bytes: ", "" + readBytes);
         for (int i = 0; i < readBytes; i++) {
-            if (i < readBytes / 2 ) {
-                if( (short) Math.abs(buffer[i]) > a1)
+            if (i < readBytes / 2) {
+                if ((short) Math.abs(buffer[i]) > a1)
                     a1 = (short) Math.abs(buffer[i]);
-                if(i+1 < readBytes/2 && buffer[i] * buffer[i+1]<=0) {
+                if (i + 1 < readBytes / 2 && buffer[i] * buffer[i + 1] <= 0) {
                     z1++;
-                    if(buffer[i] * buffer[i+1]==0)
+                    if (buffer[i] * buffer[i + 1] == 0)
                         i++;
                 }
 
-            }else{
-                if((short) Math.abs(buffer[i]) > a2 )
+            } else {
+                if ((short) Math.abs(buffer[i]) > a2)
                     a2 = (short) Math.abs(buffer[i]);
-                if(i+1 < readBytes && buffer[i] * buffer[i+1]<=0) {
+                if (i + 1 < readBytes && buffer[i] * buffer[i + 1] <= 0) {
                     z2++;
-                    if(buffer[i] * buffer[i+1]==0)
+                    if (buffer[i] * buffer[i + 1] == 0)
                         i++;
                 }
             }
-            if(Math.abs(buffer[i])>highestAmp) {
+            if (Math.abs(buffer[i]) > highestAmp) {
                 highestAmp = Math.abs(buffer[i]);
             }
 
         }
-        double pa1 = (double) ((double)Math.min(a1, a2) / (double)Math.max(a1, a2));
-        double pa2 = (double) ((double)Math.min(z1, z2) / (double)Math.max(z1, z2));
+        double pa1 = (double) ((double) Math.min(a1, a2) / (double) Math.max(a1, a2));
+        double pa2 = (double) ((double) Math.min(z1, z2) / (double) Math.max(z1, z2));
         double pa3 = 0;
-       if (highestAmp <= AMPLITUDE_THRESHOLD)pa3 = (1-Math.pow((highestAmp/ AMPLITUDE_THRESHOLD),2));
+        if (highestAmp <= AMPLITUDE_THRESHOLD)
+            pa3 = (1 - Math.pow((highestAmp / AMPLITUDE_THRESHOLD), 2));
         else pa3 = 0;
 
         double quality = pa1 * pa2 * pa3;
-        Log.d("pa1: ", ""+pa1);
-        Log.d("pa2: ", ""+pa2);
-        Log.d("pa3: ", ""+pa3);
-        Log.d("quality: ", ""+quality);
-        if(quality < QUALITY_THRESHOLD) throw new BadDataQualityException();
+        Log.d("pa1: ", "" + pa1);
+        Log.d("pa2: ", "" + pa2);
+        Log.d("pa3: ", "" + pa3);
+        Log.d("quality: ", "" + quality);
+        if (quality < QUALITY_THRESHOLD) throw new BadDataQualityException();
 
 
     }
@@ -109,7 +117,7 @@ public class FrequencyRecogniser {
         //need to init befroe listening again
     }
 
-    private double analyze(short[] buffer, int readBytes) {
+    private double analyze(short[] buffer, int readBytes) throws LowPeakException, FrequencyOutOfExpectedRangeException {
         readBytes = findFloorPowerOf2(readBytes);
         FFT fft = new FFT(readBytes);
         double[] re = new double[readBytes];
@@ -124,14 +132,15 @@ public class FrequencyRecogniser {
         double[] re3 = new double[readBytes / 3];
         double[] im2 = new double[readBytes / 2];
         double[] im3 = new double[readBytes / 3];
-        for (int i = 0; 2*i+1 < readBytes ; i++) {
-            re2[i] = (re[2 * i] + re[2 * i +1] )/2;
-            im2[i] = (im[2 * i] + im[2 * i +1] )/2;
+        for (int i = 0; 2 * i + 1 < readBytes; i++) {
+            re2[i] = (re[2 * i] + re[2 * i + 1]) / 2;
+            im2[i] = (im[2 * i] + im[2 * i + 1]) / 2;
         }
-        for (int i = 0; 3*i+2 < readBytes ; i++) {
+        for (int i = 0; 3 * i + 2 < readBytes; i++) {
 
-            re3[i] = (re[3 * i] + re[3 * i + 1] + re[3 * i + 2] )/3;
-            im3[i] = (im[3 * i] + im[3 * i + 1] + im[3 * i + 2] )/3;;
+            re3[i] = (re[3 * i] + re[3 * i + 1] + re[3 * i + 2]) / 3;
+            im3[i] = (im[3 * i] + im[3 * i + 1] + im[3 * i + 2]) / 3;
+            ;
 
         }
         //HSS
@@ -155,9 +164,11 @@ public class FrequencyRecogniser {
                 indexOfHihgestPeak = i;
             }
         }
-
-        double frequency = (double) (indexOfHihgestPeak * SAMPLE_RATE / (double) readBytes);
-
+        if (highestPeak < LOWEST_ACCEPTABLE_PEAK) throw new LowPeakException();
+        Log.d("analysis", "highest peak: " + highestPeak);
+        double frequency = indexOfHihgestPeak * SAMPLE_RATE / (double) readBytes;
+        if (frequency < LOWER_BOUND_FREQUENCY || frequency > UPPER_BOUND_FREQUENCY)
+            throw new FrequencyOutOfExpectedRangeException();
         return frequency;
     }
 
@@ -173,6 +184,12 @@ public class FrequencyRecogniser {
     }
 
     private class BadDataQualityException extends Exception {
+    }
+
+    private class LowPeakException extends Exception {
+    }
+
+    private class FrequencyOutOfExpectedRangeException extends Exception {
     }
 
 }
