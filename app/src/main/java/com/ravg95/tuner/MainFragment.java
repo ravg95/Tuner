@@ -33,6 +33,22 @@ public class MainFragment extends Fragment implements CanvasController{
                         getChildFragmentManager());
         viewPager = (ViewPager) rootView.findViewById(R.id.pager);
         viewPager.setAdapter(collectionPagerAdapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                refreshCanvas();
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         FloatingActionButton settingsFab = (FloatingActionButton) rootView.findViewById(R.id.settings);
         settingsFab.setOnClickListener(new View.OnClickListener() {
@@ -62,8 +78,6 @@ public class MainFragment extends Fragment implements CanvasController{
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(customCanvas == null)
-                    refreshCanvas();
                 customCanvas.invalidate();
             }
         });

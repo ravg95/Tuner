@@ -12,7 +12,7 @@ import lombok.NonNull;
 
 public class FrequencyRecogniser {
     private static final double AMPLITUDE_THRESHOLD = 30000;
-    private static final double QUALITY_THRESHOLD = 0.6;
+    private static final double QUALITY_THRESHOLD = 0.4 ;
     private static final double LOWEST_ACCEPTABLE_PEAK = 10000;
     private static final double UPPER_BOUND_FREQUENCY = 7905;
     private static final double LOWER_BOUND_FREQUENCY = 15;
@@ -133,14 +133,13 @@ public class FrequencyRecogniser {
         double[] im2 = new double[readBytes / 2];
         double[] im3 = new double[readBytes / 3];
         for (int i = 0; 2 * i + 1 < readBytes; i++) {
-            re2[i] = (re[2 * i] + re[2 * i + 1]) / 2;
-            im2[i] = (im[2 * i] + im[2 * i + 1]) / 2;
+            re2[i] = re[2*i];
+            im2[i] = im[2*i];
         }
         for (int i = 0; 3 * i + 2 < readBytes; i++) {
 
-            re3[i] = (re[3 * i] + re[3 * i + 1] + re[3 * i + 2]) / 3;
-            im3[i] = (im[3 * i] + im[3 * i + 1] + im[3 * i + 2]) / 3;
-            ;
+            re3[i] = re[3*i];
+            im3[i] = im[3*i];
 
         }
         //HSS

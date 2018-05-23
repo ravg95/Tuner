@@ -14,6 +14,7 @@ public class ListeningController  implements DoublePointer.OnValueChangedListene
     private FrequencyRecogniser frequencyRecogniser;
     private ToneAnalyzer toneAnalyzer;
     private ListenThread listenThread;
+
     private CanvasController canvasController;
     private AnimationThread animationThread;
     public ListeningController(CanvasController canvasController){
@@ -37,7 +38,14 @@ public class ListeningController  implements DoublePointer.OnValueChangedListene
                 Log.d("value changed sound","Note: " + note + "\ndistance: " + distance.getValue());
                 canvasController.refreshCanvas();
                 canvasController.setPitchProperties(note, String.format(Locale.getDefault(), " %.1f Hz",newValue), distance.getValue());
-            }
+                if(animationThread != null)
+                    animationThread.cancel();
+
+                animationThread = new AnimationThread();
+                Timer t = new Timer();
+                t.schedule(animationThread,0, 50);
+
+    }
 
 
 
@@ -51,9 +59,9 @@ public class ListeningController  implements DoublePointer.OnValueChangedListene
     public void resume() {
         Timer t = new Timer();
         listenThread = new ListenThread();
-        t.schedule(listenThread, 2000);
-        animationThread = new AnimationThread();
-        t.schedule(animationThread, 2010, 70);
+        t.schedule(listenThread, 1000);
+
+
     }
 
     private class ListenThread extends TimerTask {
