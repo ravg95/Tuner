@@ -177,9 +177,9 @@ public class FrequencyRecogniser {
     }
 
     public double window(double n, int N) {
-        return 1; //square window
+        //return 1; //square window
         // Hanning window
-        //return 0.5 + 0.5 * Math.cos((2 * n * Math.PI) / N);
+        return 0.5 - 0.5 * Math.cos((2 * n * Math.PI) / (N-1));
     }
 
     private class BadDataQualityException extends Exception {

@@ -82,7 +82,7 @@
         android:id="@+id/textView"
         android:layout_width="115dp"
         android:layout_height="30dp"
-        android:text="Preset:"
+        android:text="Instrument preset:"
         android:layout_marginStart="75dp"
         tools:layout_constraintTop_creator="1"
         tools:layout_constraintBottom_creator="1"
@@ -114,17 +114,23 @@
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toLeftOf="parent" />
 
+    <!--TODO: SET garbage icon for delpreset button
+-->
     <Button
         android:id="@+id/delpreset"
-        android:layout_width="41dp"
-        android:layout_height="33dp"
-        android:text="Button"
-        android:layout_marginEnd="2dp"
+        android:layout_width="30dp"
+        android:layout_height="47dp"
+        android:text="B"
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toRightOf="@+id/spinner"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         tools:layout_constraintTop_creator="1"
-        tools:layout_editor_absoluteY="278dp"
-        android:layout_marginLeft="2dp" />
+        android:layout_marginLeft="2dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="0dp" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/presetFragmenContainer"/>
 
 </android.support.constraint.ConstraintLayout>
