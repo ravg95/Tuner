@@ -31,7 +31,7 @@ public class ListeningController  implements DoublePointer.OnValueChangedListene
                 DoublePointer distance = new DoublePointer(0, null);
                 String note;
                 try {
-                    note = toneAnalyzer.getNearestNoteAndDistance(newValue, distance);
+                    note = toneAnalyzer.getNearestNoteAndDistance(newValue, distance, canvasController.getContext());
                 } catch (ToneAnalyzer.NoteOutOfBoundsException e){
                     note = "N/A";
                 }

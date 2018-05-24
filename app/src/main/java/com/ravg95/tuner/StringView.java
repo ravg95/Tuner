@@ -24,7 +24,7 @@ public class StringView extends TunerView {
 
     @Override
     protected void drawView(Canvas canvas) {
-        Preset currentPreset = Settings.getCurrentPreset();
+        Preset currentPreset = SettingsManager.getCurrentPreset(getContext());
         DoublePointer distance = new DoublePointer(dist / 100.0, null);
         int indexOfNearestString = findNearestString(note, currentPreset, distance);
         float CIRCLE_CX = (float) (getWidth() / 2.0);
@@ -45,7 +45,7 @@ public class StringView extends TunerView {
             x2 = CIRCLE_CX + (float) Math.sqrt(CIRCLE_R1 * CIRCLE_R1 - relY * relY);
             if (i == indexOfNearestString) {
                 paint.setTextSize(50);
-                if (Math.abs(distance.getValue()) <= Settings.getToleranceInCents()) {
+                if (Math.abs(distance.getValue()) <= SettingsManager.getToleranceInCents(getContext())) {
                     paint.setColor(Color.GREEN);
                     canvas.drawText(IN_TUNE_STRING, getWidth() / 2 - 50, 140, paint);
                 } else {

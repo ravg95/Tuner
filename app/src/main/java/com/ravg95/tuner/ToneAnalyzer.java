@@ -1,5 +1,6 @@
 package com.ravg95.tuner;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.util.Arrays;
@@ -12,15 +13,14 @@ import java.util.TreeMap;
 
 public class ToneAnalyzer {
     private static final double CONSTANT = 1.059463; // 2^-12
-    private static final double BASE_FREQ = Settings.getBaseFreq();
-    ;
+
     private TreeMap<Double, String> tones;
     //It is important that C is fisrt in this array as i will assume that in further calculations.
     public static final String[] toneNames = {"C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"};
     private static final int indexOfA = 9;
 
-    String getNearestNoteAndDistance(double freq, DoublePointer distance) throws NoteOutOfBoundsException {
-        double semitones = Math.log(freq / BASE_FREQ) / Math.log(CONSTANT);
+    String getNearestNoteAndDistance(double freq, DoublePointer distance, Context context) throws NoteOutOfBoundsException {
+        double semitones = Math.log(freq / SettingsManager.getBaseFreq(context)) / Math.log(CONSTANT);
         double roundSemitones = Math.round(semitones);
         double cents = (semitones - roundSemitones)*100;
         if (cents > 50) {

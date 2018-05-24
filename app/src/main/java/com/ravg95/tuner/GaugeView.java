@@ -33,7 +33,7 @@ public class GaugeView extends TunerView {
         canvas.drawArc(new RectF(50, 220, getWidth() - 50, 120 + getWidth()), -135, 90, true, paint);
         //arc in arc to represent distnce
         paint.setStyle(Paint.Style.STROKE);
-        if(dist<-Settings.getToleranceInCents() || dist>Settings.getToleranceInCents()) paint.setColor(Color.RED);
+        if(dist<-SettingsManager.getToleranceInCents(getContext()) || dist> SettingsManager.getToleranceInCents(getContext())) paint.setColor(Color.RED);
         else paint.setColor(Color.GREEN);
         canvas.drawArc(new RectF(50, 220, getWidth() - 50, 120 + getWidth()), -135, 90, true, paint);
         canvas.drawArc(new RectF(50, 220, getWidth() - 50, 120 + getWidth()), (float)(-135 + 90*(dist + 50)/100),(float)( 90 - 90*(dist + 50)/100), true, paint);
