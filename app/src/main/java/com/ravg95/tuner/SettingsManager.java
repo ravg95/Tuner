@@ -117,6 +117,8 @@ public class SettingsManager {
     public static Preset getPresetByName(String name, Context context){
         ArrayList<Preset> presets = getPresets(context);
         Preset ret = null;
+        if(presets == null)
+            return null;
         for(Preset preset : presets)
             if(preset.name.equals(name))
                 ret =  preset;
