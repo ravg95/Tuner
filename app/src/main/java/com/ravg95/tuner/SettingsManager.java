@@ -51,8 +51,9 @@ public class SettingsManager {
 
         String presetName = appSharedPrefs.getString(CURR_PRESET_STRING, "");
         Preset currPreset = getPresetByName(presetName, context);
-        if(currPreset == null)  //default option
+        if(currPreset == null) { //default option
             currPreset = new Preset(6, "Guitar Standard", new String[]{"E4","B3", "G3", "D3", "A2", "E2"});
+        }
         return currPreset;
     }
 
@@ -112,6 +113,7 @@ public class SettingsManager {
         String json = appSharedPrefs.getString(PRESET_LIST_STRING, "");
         Type type = new TypeToken<ArrayList<Preset>>(){}.getType();
         ArrayList<Preset> presets = gson.fromJson(json, type);
+        if(presets == null ) return new ArrayList<>();
         return presets;
     }
     public static Preset getPresetByName(String name, Context context){

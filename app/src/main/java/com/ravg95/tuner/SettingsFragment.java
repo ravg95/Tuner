@@ -14,6 +14,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by rafal on 16/05/2018.
@@ -33,12 +34,12 @@ public class SettingsFragment extends Fragment {
         final TextView toleranceTextView = (TextView) rootView.findViewById(R.id.toleranceText);
         final TextView frequencyTextView = (TextView) rootView.findViewById(R.id.frequencyText);
         final Spinner presetSpinner = (Spinner) rootView.findViewById(R.id.spinner);
-        ArrayList<Preset> presets = SettingsManager.getPresets(getContext());
-        String[] presetNames = new String[presets.size()+1];
+        final ArrayList<Preset> presets = SettingsManager.getPresets(getContext());
+        final ArrayList<String> presetNames = new ArrayList<>(presets.size()+1);
         for(int i = 0 ; i < presets.size(); i++){
-            presetNames[i] = presets.get(i).name;
+            presetNames.add(i, presets.get(i).name);
         }
-        presetNames[presets.size()] = ADD_PRESET_STRING;
+        presetNames.add(presets.size(), ADD_PRESET_STRING);
         final ArrayAdapter<String> adapter = new ArrayAdapter(getContext(),
                 android.R.layout.simple_spinner_item, presetNames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
@@ -48,8 +49,14 @@ public class SettingsFragment extends Fragment {
             public void onClick(View v) {
                 //TODO:: popup warning
                 String selectedPreset = presetSpinner.getSelectedItem().toString();
-                adapter.remove(selectedPreset);
-                SettingsManager.removePreset(selectedPreset, getContext());
+                if(adapter.getPosition(selectedPreset) >=0 ){
+                    presets.remove(adapter.getPosition(selectedPreset));
+                    presetNames.remove(adapter.getPosition(selectedPreset));
+                    adapter.remove(selectedPreset);
+                    adapter.notifyDataSetChanged();
+                    presetSpinner.setSelection(0);
+                    SettingsManager.removePreset(selectedPreset, getContext());
+                }
             }
         });
 
@@ -65,6 +72,9 @@ public class SettingsFragment extends Fragment {
                             .add(R.id.presetFragmenContainer,new PresetCreatorFragment(),"PRESET_FRAGMENT")
                             .addToBackStack("PRESET_FRAGMENT")
                             .commit();
+                }
+                else{
+                    getFragmentManager().popBackStack("PRESET_FRAGMENT", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 }
             }
             public void onNothingSelected(AdapterView<?> parent)

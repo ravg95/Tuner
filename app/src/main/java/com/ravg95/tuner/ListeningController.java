@@ -52,6 +52,7 @@ public class ListeningController  implements DoublePointer.OnValueChangedListene
 
     public void pause(){
         frequencyRecogniser.stopListening();
+        listenThread.cancel();
         animationThread.cancel();
     }
 

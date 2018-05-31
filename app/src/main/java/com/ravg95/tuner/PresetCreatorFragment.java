@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +66,8 @@ public class PresetCreatorFragment extends Fragment{
                     }
                     if(strings[i].charAt(0)>='a'){
                         StringBuilder myString = new StringBuilder(strings[i]);
-                        myString.setCharAt(0, (char) (strings[i].charAt(0)-('a'-'A')));
+                        myString.setCharAt(0, (char) (strings[i].charAt(0) -'a'+'A'));
+                        strings[i] = myString.toString();
                     }
                 }
                 try {
@@ -97,6 +99,6 @@ public class PresetCreatorFragment extends Fragment{
     }
 
     public void onDelete(View v) {
-        stringsLayout.removeView((View) v.getParent());
+        stringsLayout.removeView(v);
     }
 }
