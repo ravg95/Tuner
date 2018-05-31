@@ -75,7 +75,7 @@ public class SettingsManager {
 
 
     }
-    public static void addPreset(String name, int num_of_strings, String[] strings, Context context) throws DuplicatePresetNameException {
+    public static void addPreset(String name, int num_of_strings, String[] strings, Context context) throws DuplicatePresetNameException{
         SharedPreferences appSharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(context.getApplicationContext());
         SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
