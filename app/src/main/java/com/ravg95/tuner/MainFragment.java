@@ -1,5 +1,6 @@
 package com.ravg95.tuner;
 
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -67,8 +68,7 @@ public class MainFragment extends Fragment implements CanvasController{
     }
 
     public void refreshCanvas() {
-
-        customCanvas = (TunerView) viewPager.getChildAt(viewPager.getCurrentItem()).findViewById(R.id.my_canvas);
+            customCanvas = (TunerView) viewPager.getChildAt(viewPager.getCurrentItem()).findViewById(R.id.my_canvas);
     }
 
     public void setPitchProperties(String note, String format, double value) {

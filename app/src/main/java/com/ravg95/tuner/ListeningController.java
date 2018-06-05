@@ -13,8 +13,7 @@ import java.util.TimerTask;
 public class ListeningController  implements DoublePointer.OnValueChangedListener {
     private FrequencyRecogniser frequencyRecogniser;
     private ToneAnalyzer toneAnalyzer;
-    private ListenThread listenThread;
-
+    private boolean isListeningPaused;
     private CanvasController canvasController;
     private AnimationThread animationThread;
     public ListeningController(CanvasController canvasController){
@@ -27,6 +26,7 @@ public class ListeningController  implements DoublePointer.OnValueChangedListene
     @Override
     public void valueChanged(final double newValue) {
         Log.d("value changed frequency","freq: " + newValue + "Hz");
+        if(isListeningPaused) return;
 
                 DoublePointer distance = new DoublePointer(0, null);
                 String note;
@@ -52,24 +52,14 @@ public class ListeningController  implements DoublePointer.OnValueChangedListene
 
     public void pause(){
         frequencyRecogniser.stopListening();
-        listenThread.cancel();
         animationThread.cancel();
+        isListeningPaused = true;
     }
 
     public void resume() {
-        Timer t = new Timer();
-        listenThread = new ListenThread();
-        t.schedule(listenThread, 1000);
+        frequencyRecogniser.init();
+        isListeningPaused = false;
 
-
-    }
-
-    private class ListenThread extends TimerTask {
-        @Override
-        public void run() {
-            frequencyRecogniser.init();
-            frequencyRecogniser.listen();
-        }
     }
 
     private class AnimationThread extends TimerTask {
