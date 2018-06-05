@@ -36,6 +36,7 @@ public class SettingsFragment extends Fragment {
         final Spinner presetSpinner = (Spinner) rootView.findViewById(R.id.spinner);
         final ArrayList<Preset> presets = SettingsManager.getPresets(getContext());
         final ArrayList<String> presetNames = new ArrayList<>(presets.size()+1);
+        Preset currentPreset = SettingsManager.getCurrentPreset(getContext());
         for(int i = 0 ; i < presets.size(); i++){
             presetNames.add(i, presets.get(i).name);
         }
@@ -44,6 +45,11 @@ public class SettingsFragment extends Fragment {
                 android.R.layout.simple_spinner_item, presetNames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         presetSpinner.setAdapter(adapter);
+        frequencyTextView.setText((int) SettingsManager.getBaseFreq(getContext())+"");
+        toleranceTextView.setText(SettingsManager.getToleranceInCents(getContext())+"");
+
+        //TODO: set selection for current preset in spinner
+
         delPresBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

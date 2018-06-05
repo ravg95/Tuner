@@ -50,7 +50,7 @@ public class StringView extends TunerView {
                     canvas.drawText(IN_TUNE_STRING, getWidth() / 2 - 50, 140, paint);
                 } else {
                     paint.setColor(Color.RED);
-                    if (distance.getValue() < 0)
+                    if (distance.getValue() > 0)
                         canvas.drawText(TUNE_UP_STRING, getWidth() / 2 - 50, 140, paint);
                     else
                         canvas.drawText(TUNE_DOWN_STRING, getWidth() / 2 - 50, 140, paint);
@@ -58,7 +58,11 @@ public class StringView extends TunerView {
                 paint.setStyle(Paint.Style.STROKE);
                 float startAngle = -180;
                 float sweepAngle = 180;
-                canvas.drawArc(new RectF(x1, (float) (y + distance.getValue()), x2, y), startAngle, sweepAngle, false, paint);
+                if (distance.getValue() <= 0) {
+                    canvas.drawArc(new RectF(x1, (float) (y + distance.getValue()), x2, y), startAngle, sweepAngle, false, paint);
+                }else {
+                    canvas.drawArc(new RectF(x1, y, x2, (float) (y + distance.getValue())), startAngle, sweepAngle, false, paint);
+                }
                 paint.setTextSize(25);
                 canvas.drawText(currentPreset.strings[i], x1, y, paint);
 
