@@ -61,7 +61,7 @@ public class StringView extends TunerView {
                 if (distance.getValue() <= 0) {
                     canvas.drawArc(new RectF(x1, (float) (y + distance.getValue()), x2, y), startAngle, sweepAngle, false, paint);
                 }else {
-                    canvas.drawArc(new RectF(x1, y, x2, (float) (y + distance.getValue())), startAngle, sweepAngle, false, paint);
+                    canvas.drawArc(new RectF(x1, y, x2, (float) (y + distance.getValue())), -startAngle, -sweepAngle, false, paint);
                 }
                 paint.setTextSize(25);
                 canvas.drawText(currentPreset.strings[i], x1, y, paint);

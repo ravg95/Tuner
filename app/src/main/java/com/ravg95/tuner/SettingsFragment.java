@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -20,9 +21,11 @@ import java.util.Arrays;
  * Created by rafal on 16/05/2018.
  */
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends Fragment{
     private static final String ADD_PRESET_STRING = "Add preset...";
 
+    ArrayAdapter<String> adapter;
+    Spinner presetSpinner;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -30,10 +33,10 @@ public class SettingsFragment extends Fragment {
                 R.layout.settings_fragment, container, false);
         Button saveBtn = (Button) rootView.findViewById(R.id.save);
         Button cancelBtn = (Button) rootView.findViewById(R.id.cancel);
-        Button delPresBtn = (Button) rootView.findViewById(R.id.delpreset);
+        ImageButton delPresBtn = (ImageButton) rootView.findViewById(R.id.delpreset);
         final TextView toleranceTextView = (TextView) rootView.findViewById(R.id.toleranceText);
         final TextView frequencyTextView = (TextView) rootView.findViewById(R.id.frequencyText);
-        final Spinner presetSpinner = (Spinner) rootView.findViewById(R.id.spinner);
+        presetSpinner = (Spinner) rootView.findViewById(R.id.spinner);
         final ArrayList<Preset> presets = SettingsManager.getPresets(getContext());
         final ArrayList<String> presetNames = new ArrayList<>(presets.size()+1);
         Preset currentPreset = SettingsManager.getCurrentPreset(getContext());
@@ -41,7 +44,7 @@ public class SettingsFragment extends Fragment {
             presetNames.add(i, presets.get(i).name);
         }
         presetNames.add(presets.size(), ADD_PRESET_STRING);
-        final ArrayAdapter<String> adapter = new ArrayAdapter(getContext(),
+        adapter = new ArrayAdapter(getContext(),
                 android.R.layout.simple_spinner_item, presetNames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         presetSpinner.setAdapter(adapter);
@@ -56,7 +59,6 @@ public class SettingsFragment extends Fragment {
                 //TODO:: popup warning
                 String selectedPreset = presetSpinner.getSelectedItem().toString();
                 if(adapter.getPosition(selectedPreset) >=0 ){
-                    presets.remove(adapter.getPosition(selectedPreset));
                     presetNames.remove(adapter.getPosition(selectedPreset));
                     adapter.remove(selectedPreset);
                     adapter.notifyDataSetChanged();
@@ -73,9 +75,19 @@ public class SettingsFragment extends Fragment {
                 String selectedItem = parent.getItemAtPosition(position).toString();
                 if(selectedItem.equals(ADD_PRESET_STRING))
                 {
+                    PresetCreatorFragment newFragment = new PresetCreatorFragment();
+                    newFragment.setSpinerAdapterUpdater(new SpinnerAdapterUpdater() {
+                        @Override
+                        public void updateSpinnerItem(String item) {
+                            presetNames.add(presetNames.size()-1,item);
+
+                                adapter.notifyDataSetChanged();
+                                presetSpinner.setSelection(adapter.getPosition(item));
+                        }
+                    });
                     getFragmentManager()
                             .beginTransaction()
-                            .add(R.id.presetFragmenContainer,new PresetCreatorFragment(),"PRESET_FRAGMENT")
+                            .add(R.id.presetFragmenContainer,newFragment,"PRESET_FRAGMENT")
                             .addToBackStack("PRESET_FRAGMENT")
                             .commit();
                 }
@@ -110,4 +122,9 @@ public class SettingsFragment extends Fragment {
         });
         return rootView;
     }
+
+
+}
+interface SpinnerAdapterUpdater{
+    void updateSpinnerItem(String item);
 }

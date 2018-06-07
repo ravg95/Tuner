@@ -24,6 +24,11 @@ public class PresetCreatorFragment extends Fragment{
     LinearLayout stringsLayout;
     ArrayList<View> stringViews;
 
+    SpinnerAdapterUpdater spinnerAdapterUpdater;
+    public void setSpinerAdapterUpdater(SpinnerAdapterUpdater spinnerAdapterUpdater){
+        this.spinnerAdapterUpdater = spinnerAdapterUpdater;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -72,6 +77,7 @@ public class PresetCreatorFragment extends Fragment{
                 }
                 try {
                     SettingsManager.addPreset(name, numOfStrings, strings, getContext());
+                    spinnerAdapterUpdater.updateSpinnerItem(name);
                     getFragmentManager().popBackStack("PRESET_FRAGMENT", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 } catch (DuplicatePresetNameException e) {
                     //TODO:: display warnings

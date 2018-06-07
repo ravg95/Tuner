@@ -97,10 +97,15 @@ public class SettingsManager {
                 .getDefaultSharedPreferences(context.getApplicationContext());
         SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
         ArrayList<Preset> presets = getPresets(context);
+        Preset presetToBeRemoved = null;
         for(Preset preset : presets){
-            if(preset.name.equals(name))
-                presets.remove(preset);
+            if(preset.name.equals(name)) {
+                presetToBeRemoved = preset;
+                break;
+            }
         }
+        if(presetToBeRemoved!= null)
+          presets.remove(presetToBeRemoved);
         Gson gson = new Gson();
         String json = gson.toJson(presets);
         prefsEditor.putString(PRESET_LIST_STRING, json);

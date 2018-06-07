@@ -13,7 +13,7 @@ import java.util.TimerTask;
 public class ListeningController  implements DoublePointer.OnValueChangedListener {
     private FrequencyRecogniser frequencyRecogniser;
     private ToneAnalyzer toneAnalyzer;
-    private boolean isListeningPaused;
+    private boolean isListeningPaused = true;
     private CanvasController canvasController;
     private AnimationThread animationThread;
     public ListeningController(CanvasController canvasController){
