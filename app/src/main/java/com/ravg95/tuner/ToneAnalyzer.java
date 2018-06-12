@@ -45,16 +45,8 @@ public class ToneAnalyzer {
     public static int getSemitonesFromNoteName(String name){
         String tone = name.charAt(0)+"";
         int octave = name.charAt(name.length()-1) - '0';
-        Log.d("note to freq:","tone: "+tone + " octave: "+ octave);
         int toneIndex = Arrays.binarySearch(toneNames,tone);
-        int semitones = 12*octave - indexOfA - 4*toneNames.length;
-        int distT = indexOfA - toneIndex;
-        if(octave<4 || (octave == 4 && distT > 0)){
-            semitones += distT;
-            semitones = -semitones;
-        } else if(octave>4 || (octave == 4 && distT < 0)) {
-            semitones -= distT;
-        }
+        int semitones = (octave - 4) * 12 + toneIndex - indexOfA;
         return semitones;
     }
 

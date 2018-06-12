@@ -25,7 +25,7 @@ public class StringView extends TunerView {
     @Override
     protected void drawView(Canvas canvas) {
         Preset currentPreset = SettingsManager.getCurrentPreset(getContext());
-        DoublePointer distance = new DoublePointer(dist / 100.0, null);
+        DoublePointer distance = new DoublePointer(dist, null);
         int indexOfNearestString = findNearestString(note, currentPreset, distance);
         float CIRCLE_CX = (float) (getWidth() / 2.0);
         float CIRCLE_CY = (float) 150 + CIRCLE_CX;
@@ -101,8 +101,8 @@ public class StringView extends TunerView {
         int retIndex = 0;
         for (int i = 0; i < currentPreset.numOfStrings; i++) {
             int semiString = ToneAnalyzer.getSemitonesFromNoteName(currentPreset.strings[i]);
-            distances[i] = semiNote - semiString + distance.getValue();
-            if (Math.abs(distances[i]) < minDist) {
+            distances[i] = 100*(semiNote - semiString) + (distance.getValue());
+            if (Math.abs(distances[i]) < Math.abs(minDist)) {
                 minDist = distances[i];
                 retIndex = i;
             }
