@@ -51,18 +51,18 @@ public class StringView extends TunerView {
                     canvas.drawText(IN_TUNE_STRING, getWidth() / 2 - 50, 140, paint);
                 } else {
                     paint.setColor(Color.RED);
-                    if (distance.getValue() > 0)
+                    if (distance.getValue() <= 0)
                         canvas.drawText(TUNE_UP_STRING, getWidth() / 2 - 50, 140, paint);
                     else
                         canvas.drawText(TUNE_DOWN_STRING, getWidth() / 2 - 50, 140, paint);
                 }
                 paint.setStyle(Paint.Style.STROKE);
-                float startAngle = -180;
+                float startAngle = 180;
                 float sweepAngle = 180;
                 if (distance.getValue() <= 0) {
-                    canvas.drawArc(new RectF(x1, (float) (y + distance.getValue()), x2, y), startAngle, sweepAngle, false, paint);
+                   // canvas.drawArc(new RectF(x1, (float) (y + distance.getValue()/10.0), x2, y), (float)(startAngle + distance.getValue()/10.0), (float)(sweepAngle - distance.getValue()/5.0), false, paint);
                 }else {
-                    canvas.drawArc(new RectF(x1, y, x2, (float) (y + distance.getValue())), -startAngle, -sweepAngle, false, paint);
+                  //  canvas.drawArc(new RectF(x1, y, x2, (float) (y + distance.getValue()/10.0)), (float)(startAngle + distance.getValue()/10.0), -(float)(sweepAngle - distance.getValue()/5.0), false, paint);
                 }
                 paint.setTextSize(25);
                 canvas.drawText(currentPreset.strings[i], x1, y, paint);
@@ -103,7 +103,6 @@ public class StringView extends TunerView {
         for (int i = 0; i < currentPreset.numOfStrings; i++) {
             int semiString = ToneAnalyzer.getSemitonesFromNoteName(currentPreset.strings[i]);
             distances[i] = -100*(semiNote - semiString) + (distance.getValue());
-            Log.d("string view","Note: "+note+" String: "+currentPreset.strings[i]+" Distance: "+distances[i]);
             if (Math.abs(distances[i]) < Math.abs(minDist)) {
                 minDist = distances[i];
                 retIndex = i;

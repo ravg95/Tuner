@@ -51,7 +51,6 @@ public class ToneAnalyzer {
         int toneIndex = Arrays.asList(toneNames).indexOf(tone);
         //TODO:: make work for all kinds of tone naming eg. G# = Ab
         int semitones = (octave - 4) * 12 + toneIndex - indexOfA;
-        Log.d("toneAnalyzer", "tone index: "+ toneIndex);
         return semitones;
     }
 
