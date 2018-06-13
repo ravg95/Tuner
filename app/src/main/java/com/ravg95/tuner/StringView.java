@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 
 /**
  * Created by rafal on 16/05/2018.
@@ -94,14 +95,15 @@ public class StringView extends TunerView {
         }
     }
 
-    private int findNearestString(String note, Preset currentPreset, DoublePointer distance) {
+    protected static int findNearestString(String note, Preset currentPreset, DoublePointer distance) {
         double[] distances = new double[currentPreset.numOfStrings];
         int semiNote = ToneAnalyzer.getSemitonesFromNoteName(note);
         double minDist = Double.MAX_VALUE;
         int retIndex = 0;
         for (int i = 0; i < currentPreset.numOfStrings; i++) {
             int semiString = ToneAnalyzer.getSemitonesFromNoteName(currentPreset.strings[i]);
-            distances[i] = 100*(semiNote - semiString) + (distance.getValue());
+            distances[i] = -100*(semiNote - semiString) + (distance.getValue());
+            Log.d("string view","Note: "+note+" String: "+currentPreset.strings[i]+" Distance: "+distances[i]);
             if (Math.abs(distances[i]) < Math.abs(minDist)) {
                 minDist = distances[i];
                 retIndex = i;

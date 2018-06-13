@@ -44,9 +44,14 @@ public class ToneAnalyzer {
 
     public static int getSemitonesFromNoteName(String name){
         String tone = name.charAt(0)+"";
+        char sign = name.charAt(1);
+        if(sign == '#' || sign == 'b')
+            tone = tone.concat(sign+"");
         int octave = name.charAt(name.length()-1) - '0';
-        int toneIndex = Arrays.binarySearch(toneNames,tone);
+        int toneIndex = Arrays.asList(toneNames).indexOf(tone);
+        //TODO:: make work for all kinds of tone naming eg. G# = Ab
         int semitones = (octave - 4) * 12 + toneIndex - indexOfA;
+        Log.d("toneAnalyzer", "tone index: "+ toneIndex);
         return semitones;
     }
 
