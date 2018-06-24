@@ -11,13 +11,13 @@ import java.util.TimerTask;
  */
 
 public class ListeningController  implements DoublePointer.OnValueChangedListener {
-    private FrequencyRecogniser frequencyRecogniser;
+    private FrequencyRecognizer frequencyRecognizer;
     private ToneAnalyzer toneAnalyzer;
     private boolean isListeningPaused = true;
     private CanvasController canvasController;
     private AnimationThread animationThread;
     public ListeningController(CanvasController canvasController){
-        frequencyRecogniser = new FrequencyRecogniser(new DoublePointer(0, this));
+        frequencyRecognizer = new FrequencyRecognizer(new DoublePointer(0, this));
         toneAnalyzer = new ToneAnalyzer();
         animationThread = new AnimationThread();
         this.canvasController = canvasController;
@@ -51,13 +51,13 @@ public class ListeningController  implements DoublePointer.OnValueChangedListene
 
 
     public void pause(){
-        frequencyRecogniser.stopListening();
+        frequencyRecognizer.stopListening();
         animationThread.cancel();
         isListeningPaused = true;
     }
 
     public void resume() {
-        frequencyRecogniser.init();
+        frequencyRecognizer.init();
         isListeningPaused = false;
 
     }

@@ -14,13 +14,13 @@ import be.tarsos.dsp.pitch.PitchProcessor;
 import lombok.NonNull;
 
 
-public class FrequencyRecogniser {
+public class FrequencyRecognizer {
     private int SAMPLE_RATE = 22050;
     @NonNull
     private DoublePointer frequency;
 
 
-    public FrequencyRecogniser(DoublePointer frequency) {
+    public FrequencyRecognizer(DoublePointer frequency) {
         this.frequency = frequency;
     }
 
