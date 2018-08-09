@@ -1,7 +1,9 @@
-package com.ravg95.tuner;
+package com.ravg95.tuner.data;
 
 
 import android.util.Log;
+
+import com.ravg95.tuner.util.DoublePointer;
 
 import be.tarsos.dsp.AudioDispatcher;
 

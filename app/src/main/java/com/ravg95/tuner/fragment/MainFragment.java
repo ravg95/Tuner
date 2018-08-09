@@ -1,4 +1,4 @@
-package com.ravg95.tuner;
+package com.ravg95.tuner.fragment;
 
 
 import android.os.Bundle;
@@ -10,15 +10,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ravg95.tuner.presenter.MainFragmentPresenter;
+import com.ravg95.tuner.R;
+import com.ravg95.tuner.view.TunerView;
+import com.ravg95.tuner.util.CollectionPagerAdapter;
+
 /**
  * Created by rafal on 16/05/2018.
  */
 
-public class MainFragment extends Fragment implements CanvasController{
-    private TunerView customCanvas;
+public class MainFragment extends Fragment{
     CollectionPagerAdapter collectionPagerAdapter;
     ViewPager viewPager;
-    private ListeningController listeningController;
+    private MainFragmentPresenter mainFragmentPresenter = new MainFragmentPresenter(this);
 
 
     @Nullable
@@ -27,29 +31,13 @@ public class MainFragment extends Fragment implements CanvasController{
 
         View rootView = inflater.inflate(
                 R.layout.main_fragment, container, false);
-        customCanvas = (TunerView) rootView.findViewById(R.id.my_canvas);
 
         collectionPagerAdapter =
                 new CollectionPagerAdapter(
                         getChildFragmentManager());
         viewPager = (ViewPager) rootView.findViewById(R.id.pager);
         viewPager.setAdapter(collectionPagerAdapter);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
 
-            @Override
-            public void onPageSelected(int position) {
-                customCanvas = (TunerView) viewPager.getChildAt(viewPager.getCurrentItem()).findViewById(R.id.my_canvas);
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
 
         FloatingActionButton settingsFab = (FloatingActionButton) rootView.findViewById(R.id.settings);
         settingsFab.setOnClickListener(new View.OnClickListener() {
@@ -67,35 +55,29 @@ public class MainFragment extends Fragment implements CanvasController{
         return rootView;
     }
 
-    public void refreshCanvas() {
-            customCanvas = (TunerView) viewPager.getChildAt(viewPager.getCurrentItem()).findViewById(R.id.my_canvas);
-    }
 
-    public void setPitchProperties(String note, String format, double value) {
-        customCanvas.setPitchProperties(note, format, value);
+    public TunerView getTunerView(){
+        return (TunerView) viewPager.getChildAt(viewPager.getCurrentItem()).findViewById(R.id.my_canvas);
     }
 
     public void invalidateCanvas() {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                customCanvas.invalidate();
+                getTunerView().invalidate();
             }
         });
     }
 
-    public void setListeningController(ListeningController listeningController) {
-        this.listeningController = listeningController;
-    }
     @Override
     public void onResume() {
         super.onResume();
-        listeningController.resume();
+        mainFragmentPresenter.resume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        listeningController.pause();
+        mainFragmentPresenter.pause();
     }
 }

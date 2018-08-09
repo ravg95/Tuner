@@ -1,4 +1,4 @@
-package com.ravg95.tuner;
+package com.ravg95.tuner.data;
 
 
 import android.content.Context;
@@ -7,6 +7,8 @@ import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.ravg95.tuner.exception.DuplicatePresetNameException;
+import com.ravg95.tuner.exception.SettingsFormatException;
 import com.ravg95.tuner.util.Preset;
 
 import java.lang.reflect.Type;
@@ -23,7 +25,7 @@ public class SettingsManager {
     private static final String TOLERANCE_STRING = "Tolerance";
     private static final String CURR_PRESET_STRING = "CurrPreset";
 
-    static double getBaseFreq(Context context){
+    public static double getBaseFreq(Context context){
 
         SharedPreferences appSharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(context.getApplicationContext());
@@ -75,7 +77,7 @@ public class SettingsManager {
 
 
     }
-    public static void addPreset(String name, int num_of_strings, String[] strings, Context context) throws DuplicatePresetNameException{
+    public static void addPreset(String name, int num_of_strings, String[] strings, Context context) throws DuplicatePresetNameException {
         SharedPreferences appSharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(context.getApplicationContext());
         SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();

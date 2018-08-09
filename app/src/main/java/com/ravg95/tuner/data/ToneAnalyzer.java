@@ -1,7 +1,9 @@
-package com.ravg95.tuner;
+package com.ravg95.tuner.data;
 
 import android.content.Context;
-import android.util.Log;
+
+import com.ravg95.tuner.data.SettingsManager;
+import com.ravg95.tuner.util.DoublePointer;
 
 import java.util.Arrays;
 import java.util.TreeMap;
@@ -19,7 +21,7 @@ public class ToneAnalyzer {
     public static final String[] toneNames = {"C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"};
     private static final int indexOfA = 9;
 
-    String getNearestNoteAndDistance(double freq, DoublePointer distance, Context context) {
+    public String getNearestNoteAndDistance(double freq, DoublePointer distance, Context context) {
         double semitones = Math.log(freq / SettingsManager.getBaseFreq(context)) / Math.log(CONSTANT);
         double roundSemitones = Math.round(semitones);
         double cents = (semitones - roundSemitones)*100;

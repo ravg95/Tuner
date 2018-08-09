@@ -1,4 +1,4 @@
-package com.ravg95.tuner;
+package com.ravg95.tuner.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ravg95.tuner.R;
+
 /**
  * Created by rafal on 16/05/2018.
  */
 
 
-public class ObjectFragment extends Fragment {
+public class PagerObjectFragment extends Fragment {
     public static final String ARG_OBJECT = "object";
 
     @Override

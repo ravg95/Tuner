@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.ravg95.tuner.StringView
+    <com.ravg95.tuner.view.StringView
         android:id="@+id/my_canvas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
