@@ -30,11 +30,7 @@ public class ListeningController  implements DoublePointer.OnValueChangedListene
 
                 DoublePointer distance = new DoublePointer(0, null);
                 String note;
-                try {
-                    note = toneAnalyzer.getNearestNoteAndDistance(newValue, distance, canvasController.getContext());
-                } catch (ToneAnalyzer.NoteOutOfBoundsException e){
-                    note = "N/A";
-                }
+                note = toneAnalyzer.getNearestNoteAndDistance(newValue, distance, canvasController.getContext());
 
                 Log.d("value changed sound","Note: " + note + "\ndistance: " + distance.getValue());
                 canvasController.refreshCanvas();
@@ -57,7 +53,7 @@ public class ListeningController  implements DoublePointer.OnValueChangedListene
     }
 
     public void resume() {
-        frequencyRecognizer.init();
+        frequencyRecognizer.startListening();
         isListeningPaused = false;
 
     }

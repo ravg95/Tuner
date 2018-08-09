@@ -7,11 +7,10 @@ import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.ravg95.tuner.util.Preset;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Optional;
-import java.util.zip.DataFormatException;
 
 /**
  * Created by rafal on 17/11/2017.
@@ -82,7 +81,7 @@ public class SettingsManager {
         SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
         ArrayList<Preset> presets = getPresets(context);
         for(Preset preset : presets){
-            if(preset.name.equals(name))
+            if(preset.getName().equals(name))
                 throw new DuplicatePresetNameException();
         }
         presets.add(new Preset(num_of_strings, name, strings));
@@ -99,7 +98,7 @@ public class SettingsManager {
         ArrayList<Preset> presets = getPresets(context);
         Preset presetToBeRemoved = null;
         for(Preset preset : presets){
-            if(preset.name.equals(name)) {
+            if(preset.getName().equals(name)) {
                 presetToBeRemoved = preset;
                 break;
             }
@@ -127,7 +126,7 @@ public class SettingsManager {
         if(presets == null)
             return null;
         for(Preset preset : presets)
-            if(preset.name.equals(name))
+            if(preset.getName().equals(name))
                 ret =  preset;
         return ret;
     }

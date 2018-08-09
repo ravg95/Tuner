@@ -12,14 +12,14 @@ import java.util.TreeMap;
  */
 
 public class ToneAnalyzer {
-    private static final double CONSTANT = 1.059463; // 2^-12
+    private static final double CONSTANT = 1.059463; // 2^(-12)
 
     private TreeMap<Double, String> tones;
     //It is important that C is fisrt in this array as i will assume that in further calculations.
     public static final String[] toneNames = {"C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"};
     private static final int indexOfA = 9;
 
-    String getNearestNoteAndDistance(double freq, DoublePointer distance, Context context) throws NoteOutOfBoundsException {
+    String getNearestNoteAndDistance(double freq, DoublePointer distance, Context context) {
         double semitones = Math.log(freq / SettingsManager.getBaseFreq(context)) / Math.log(CONSTANT);
         double roundSemitones = Math.round(semitones);
         double cents = (semitones - roundSemitones)*100;
@@ -52,10 +52,5 @@ public class ToneAnalyzer {
         //TODO:: make work for all kinds of tone naming eg. G# = Ab
         int semitones = (octave - 4) * 12 + toneIndex - indexOfA;
         return semitones;
-    }
-
-
-
-    class NoteOutOfBoundsException extends Throwable {
     }
 }

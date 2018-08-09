@@ -6,7 +6,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
+
+import com.ravg95.tuner.util.Preset;
 
 /**
  * Created by rafal on 16/05/2018.
@@ -36,9 +37,9 @@ public class StringView extends TunerView {
         canvas.drawColor(Color.BLACK);
         paint.setColor(Color.WHITE);
         paint.setTextSize(25);
-        canvas.drawText(currentPreset.name, getWidth() / 2 - 6 * currentPreset.name.length(), 90, paint);
-        float stringDist = 2 * CIRCLE_R1 / (currentPreset.numOfStrings + 1);
-        for (int i = 0; i < currentPreset.numOfStrings; i++) {
+        canvas.drawText(currentPreset.getName(), getWidth() / 2 - 6 * currentPreset.getName().length(), 90, paint);
+        float stringDist = 2 * CIRCLE_R1 / (currentPreset.getNumOfStrings() + 1);
+        for (int i = 0; i < currentPreset.getNumOfStrings(); i++) {
             float y = CIRCLE_CY - CIRCLE_R1 + (i + 1) * stringDist;
             float relY = CIRCLE_R1 - (i + 1) * stringDist;
             float x1, x2;
@@ -51,7 +52,7 @@ public class StringView extends TunerView {
                     canvas.drawText(IN_TUNE_STRING, getWidth() / 2 - 50, 140, paint);
                 } else {
                     paint.setColor(Color.RED);
-                    if (distance.getValue() <= 0)
+                    if (distance.getValue() > 0)
                         canvas.drawText(TUNE_UP_STRING, getWidth() / 2 - 50, 140, paint);
                     else
                         canvas.drawText(TUNE_DOWN_STRING, getWidth() / 2 - 50, 140, paint);
@@ -60,18 +61,18 @@ public class StringView extends TunerView {
                 float startAngle = 180;
                 float sweepAngle = 180;
                 if (distance.getValue() <= 0) {
-                   // canvas.drawArc(new RectF(x1, (float) (y + distance.getValue()/10.0), x2, y), (float)(startAngle + distance.getValue()/10.0), (float)(sweepAngle - distance.getValue()/5.0), false, paint);
+                    canvas.drawArc(new RectF(x1, (float) (y + distance.getValue()/10.0), x2, y), startAngle, sweepAngle, false, paint);
                 }else {
-                  //  canvas.drawArc(new RectF(x1, y, x2, (float) (y + distance.getValue()/10.0)), (float)(startAngle + distance.getValue()/10.0), -(float)(sweepAngle - distance.getValue()/5.0), false, paint);
+                    canvas.drawArc(new RectF(x1, y, x2, (float) (y + distance.getValue()/10.0)), startAngle, -sweepAngle, false, paint);
                 }
                 paint.setTextSize(25);
-                canvas.drawText(currentPreset.strings[i], x1, y, paint);
+                canvas.drawText(currentPreset.getStrings()[i], x1, y, paint);
 
             } else {
                 paint.setColor(Color.GRAY);
                 canvas.drawLine(x1, y, x2, y, paint);
                 paint.setTextSize(25);
-                canvas.drawText(currentPreset.strings[i], x1, y, paint);
+                canvas.drawText(currentPreset.getStrings()[i], x1, y, paint);
             }
         }
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -96,12 +97,12 @@ public class StringView extends TunerView {
     }
 
     protected static int findNearestString(String note, Preset currentPreset, DoublePointer distance) {
-        double[] distances = new double[currentPreset.numOfStrings];
+        double[] distances = new double[currentPreset.getNumOfStrings()];
         int semiNote = ToneAnalyzer.getSemitonesFromNoteName(note);
         double minDist = Double.MAX_VALUE;
         int retIndex = 0;
-        for (int i = 0; i < currentPreset.numOfStrings; i++) {
-            int semiString = ToneAnalyzer.getSemitonesFromNoteName(currentPreset.strings[i]);
+        for (int i = 0; i < currentPreset.getNumOfStrings(); i++) {
+            int semiString = ToneAnalyzer.getSemitonesFromNoteName(currentPreset.getStrings()[i]);
             distances[i] = -100*(semiNote - semiString) + (distance.getValue());
             if (Math.abs(distances[i]) < Math.abs(minDist)) {
                 minDist = distances[i];

@@ -100,7 +100,7 @@ public class PresetCreatorFragment extends Fragment{
     public View onAddField() {
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View v = inflater.inflate(R.layout.field, null);
-        stringsLayout.addView(v, 0);
+        stringsLayout.addView(v, stringsLayout.getChildCount());
         return v;
     }
 

@@ -14,8 +14,9 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.ravg95.tuner.util.Preset;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by rafal on 16/05/2018.
@@ -41,7 +42,7 @@ public class SettingsFragment extends Fragment{
         final ArrayList<String> presetNames = new ArrayList<>(presets.size()+1);
         Preset currentPreset = SettingsManager.getCurrentPreset(getContext());
         for(int i = 0 ; i < presets.size(); i++){
-            presetNames.add(i, presets.get(i).name);
+            presetNames.add(i, presets.get(i).getName());
         }
         presetNames.add(presets.size(), ADD_PRESET_STRING);
         adapter = new ArrayAdapter(getContext(),

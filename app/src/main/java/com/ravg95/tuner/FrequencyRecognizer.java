@@ -18,19 +18,15 @@ public class FrequencyRecognizer {
     private int SAMPLE_RATE = 22050;
     @NonNull
     private DoublePointer frequency;
-
+    Thread listenThread;
 
     public FrequencyRecognizer(DoublePointer frequency) {
         this.frequency = frequency;
     }
 
-
-    Thread listenThread;
-
-    public void init() {
+    public void startListening() {
 
         AudioDispatcher dispatcher = AudioDispatcherFactory.fromDefaultMicrophone(SAMPLE_RATE,1024,0);
-
         PitchDetectionHandler pdh = new PitchDetectionHandler() {
             @Override
             public void handlePitch(PitchDetectionResult result, AudioEvent e) {
@@ -42,17 +38,15 @@ public class FrequencyRecognizer {
         };
         AudioProcessor p = new PitchProcessor(PitchProcessor.PitchEstimationAlgorithm.FFT_YIN, SAMPLE_RATE, 1024, pdh);
         dispatcher.addAudioProcessor(p);
-        Log.d("Pitch init", "pitch initialised");
+        Log.d("Pitch listen", "listeinng initialised");
         listenThread = new Thread(dispatcher,"Audio Dispatcher");
-        Log.d("Pitch listen", "pitch started");
+        Log.d("Pitch listen", "listening started");
         listenThread.start();
     }
-
 
     public void stopListening() {
         if (listenThread != null)
             listenThread.interrupt();
         Log.d("Pitch stop", "pitch stopped");
     }
-
 }
