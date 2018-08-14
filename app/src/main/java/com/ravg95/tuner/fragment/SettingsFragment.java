@@ -18,15 +18,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ravg95.tuner.R;
-import com.ravg95.tuner.data.SettingsManager;
+import com.ravg95.tuner.tools.SettingsManager;
 import com.ravg95.tuner.presenter.SettingsFragmentPresenter;
 
 /**
  * Created by rafal on 16/05/2018.
  */
 
-public class SettingsFragment extends Fragment{
+public class SettingsFragment extends Fragment implements AdapterView.OnItemSelectedListener{
     public static final String ADD_PRESET_STRING = "Add preset...";
+    public static final String GUITAR_STANDARD = "Guitar Standard";
 
 
     Spinner presetSpinner;
@@ -57,24 +58,7 @@ public class SettingsFragment extends Fragment{
             }
         });
 
-        presetSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-        {
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-            {
-                String selectedItem = parent.getItemAtPosition(position).toString();
-                if(selectedItem.equals(ADD_PRESET_STRING))
-                {
-                    settingsFragmentPresenter.openPresetCreator();
-                }
-                else{
-                    settingsFragmentPresenter.presetSelected();
-                }
-            }
-            public void onNothingSelected(AdapterView<?> parent)
-            {
-
-            }
-        });
+        presetSpinner.setOnItemSelectedListener(this);
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,6 +75,19 @@ public class SettingsFragment extends Fragment{
         return rootView;
     }
 
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String selectedItem = parent.getItemAtPosition(position).toString();
+        if(selectedItem.equals(ADD_PRESET_STRING))
+        {
+            settingsFragmentPresenter.openPresetCreator();
+        }
+        else{
+            settingsFragmentPresenter.presetSelected();
+        }
+    }
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 
     public void close() {
         getActivity().getSupportFragmentManager().popBackStack("SETTINGS", FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -148,5 +145,9 @@ public class SettingsFragment extends Fragment{
         });
         AlertDialog dialog = builder.show();
 
+    }
+
+    public int getSpinnerSize() {
+        return presetSpinner.getAdapter().getCount();
     }
 }

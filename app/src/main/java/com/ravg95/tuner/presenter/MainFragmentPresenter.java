@@ -1,11 +1,17 @@
 package com.ravg95.tuner.presenter;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import com.ravg95.tuner.data.FrequencyRecognizer;
-import com.ravg95.tuner.data.ToneAnalyzer;
+import com.ravg95.tuner.tools.FrequencyRecognizer;
+import com.ravg95.tuner.tools.ToneAnalyzer;
 import com.ravg95.tuner.fragment.MainFragment;
 import com.ravg95.tuner.util.DoublePointer;
+import com.ravg95.tuner.view.TunerView;
+
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -15,6 +21,7 @@ import java.util.TimerTask;
  */
 
 public class MainFragmentPresenter implements DoublePointer.OnValueChangedListener {
+    public static final int PERMISSION_REQUEST_RECORD_AUDIO = 1;
     private FrequencyRecognizer frequencyRecognizer;
     private ToneAnalyzer toneAnalyzer;
     private boolean isListeningPaused = true;
@@ -37,11 +44,16 @@ public class MainFragmentPresenter implements DoublePointer.OnValueChangedListen
                 note = toneAnalyzer.getNearestNoteAndDistance(newValue, distance, mainFragment.getContext());
 
                 Log.d("value changed sound","Note: " + note + "\ndistance: " + distance.getValue());
-                mainFragment.getTunerView()
-                        .getTunerViewPresenter()
-                        .setPitchProperties(note, String.format(Locale.getDefault(), " %.1f Hz",newValue), distance.getValue());
-                if(animationThread != null)
+                TunerView tunerView = mainFragment.getTunerView();
+                if(tunerView == null){
+                    return;
+                } else {
+                    tunerView.getTunerViewPresenter()
+                             .setPitchProperties(note, String.format(Locale.getDefault(), " %.1f Hz", newValue), distance.getValue());
+                }
+                if(animationThread != null) {
                     animationThread.cancel();
+                }
                 animationThread = new AnimationThread();
                 Timer t = new Timer();
                 t.schedule(animationThread,0, 50);
@@ -58,9 +70,15 @@ public class MainFragmentPresenter implements DoublePointer.OnValueChangedListen
     }
 
     public void resume() {
-        frequencyRecognizer.startListening();
-        isListeningPaused = false;
-
+        if (ContextCompat.checkSelfPermission(mainFragment.getActivity(),
+                Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(mainFragment.getActivity(),
+                        new String[]{Manifest.permission.RECORD_AUDIO},
+                        PERMISSION_REQUEST_RECORD_AUDIO);
+        } else {
+            scheduleListening();
+        }
     }
 
     private class AnimationThread extends TimerTask {
@@ -69,4 +87,11 @@ public class MainFragmentPresenter implements DoublePointer.OnValueChangedListen
             mainFragment.invalidateCanvas();
         }
     }
+
+    private void scheduleListening(){
+            frequencyRecognizer.startListening();
+            isListeningPaused = false;
+
+    }
+
 }

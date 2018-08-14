@@ -7,7 +7,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 
-import com.ravg95.tuner.data.SettingsManager;
+import com.ravg95.tuner.tools.SettingsManager;
 
 /**
  * Created by rafal on 16/05/2018.
@@ -19,11 +19,15 @@ public class GaugeView extends TunerView {
         super(c, attrs);
     }
 
+
+
     @Override
     protected void drawView(Canvas canvas) {
         initConstants();
         canvas.drawColor(Color.BLACK);
-        drawNote(canvas);
+        if(!tunerViewPresenter.getFreq().equals(EMPTY_FREQ)) {
+            drawNote(canvas);
+        }
         drawGauge(canvas);
         drawRotatingCircle(canvas);
     }

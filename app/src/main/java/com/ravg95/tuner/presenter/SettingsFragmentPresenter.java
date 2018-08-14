@@ -3,8 +3,7 @@ package com.ravg95.tuner.presenter;
 
 import android.widget.ArrayAdapter;
 
-import com.ravg95.tuner.R;
-import com.ravg95.tuner.data.SettingsManager;
+import com.ravg95.tuner.tools.SettingsManager;
 import com.ravg95.tuner.exception.SettingsFormatException;
 import com.ravg95.tuner.fragment.PresetCreatorFragment;
 import com.ravg95.tuner.fragment.SettingsFragment;
@@ -56,7 +55,11 @@ public class SettingsFragmentPresenter {
 
     public void askToDeletePreset() {
         String selectedPreset = settingsFragment.getSpinnerText();
-        settingsFragment.showDeleteWarningDialog(selectedPreset);
+        if(selectedPreset.equals(SettingsFragment.GUITAR_STANDARD) || selectedPreset.equals(SettingsFragment.ADD_PRESET_STRING) || settingsFragment.getSpinnerSize() == 1) {
+            settingsFragment.displayWarning("Can't delete this preset");
+        } else {
+            settingsFragment.showDeleteWarningDialog(selectedPreset);
+        }
     }
 
     public void deletePreset(){
@@ -76,8 +79,8 @@ public class SettingsFragmentPresenter {
     }
 
     public void initPresets() {
-        ArrayList<Preset> presets = SettingsManager.getPresets(settingsFragment.getContext());
-        ArrayList<String> presetNames = new ArrayList<>(presets.size()+1);
+        presets = SettingsManager.getPresets(settingsFragment.getContext());
+        presetNames = new ArrayList<>(presets.size()+1);
 
         for(int i = 0 ; i < presets.size(); i++){
             presetNames.add(i, presets.get(i).getName());

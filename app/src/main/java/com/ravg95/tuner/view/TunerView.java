@@ -19,6 +19,8 @@ public abstract class TunerView extends View {
     protected Canvas mCanvas;
     protected Paint paint;
 
+    protected static final String EMPTY_FREQ = " -1,0 Hz";
+
     Context context;
     @Getter
     TunerViewPresenter tunerViewPresenter;

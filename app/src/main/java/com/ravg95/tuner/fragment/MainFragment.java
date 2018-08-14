@@ -15,6 +15,8 @@ import com.ravg95.tuner.R;
 import com.ravg95.tuner.view.TunerView;
 import com.ravg95.tuner.util.CollectionPagerAdapter;
 
+import java.util.Optional;
+
 /**
  * Created by rafal on 16/05/2018.
  */
@@ -56,15 +58,22 @@ public class MainFragment extends Fragment{
     }
 
 
-    public TunerView getTunerView(){
-        return (TunerView) viewPager.getChildAt(viewPager.getCurrentItem()).findViewById(R.id.my_canvas);
-    }
+    public TunerView getTunerView() {
+        try {
+            return (TunerView) viewPager.getChildAt(viewPager.getCurrentItem()).findViewById(R.id.my_canvas);
 
+        } catch (NullPointerException e){
+            return null;
+        }
+    }
     public void invalidateCanvas() {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                getTunerView().invalidate();
+                TunerView tunerView = getTunerView();
+                if(tunerView != null) {
+                    tunerView.invalidate();
+                }
             }
         });
     }

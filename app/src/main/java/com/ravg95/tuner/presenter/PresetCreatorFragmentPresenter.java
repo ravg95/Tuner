@@ -3,7 +3,7 @@ package com.ravg95.tuner.presenter;
 import android.view.View;
 import android.widget.EditText;
 
-import com.ravg95.tuner.data.SettingsManager;
+import com.ravg95.tuner.tools.SettingsManager;
 import com.ravg95.tuner.exception.DuplicatePresetNameException;
 import com.ravg95.tuner.fragment.PresetCreatorFragment;
 
@@ -15,6 +15,7 @@ public class PresetCreatorFragmentPresenter {
     PresetCreatorFragment presetCreatorFragment;
     public PresetCreatorFragmentPresenter(PresetCreatorFragment presetCreatorFragment){
         stringViews = new ArrayList<>();
+        this.presetCreatorFragment = presetCreatorFragment;
 
     }
 

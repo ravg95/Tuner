@@ -1,4 +1,4 @@
-package com.ravg95.tuner.data;
+package com.ravg95.tuner.tools;
 
 
 import android.content.Context;
@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ravg95.tuner.exception.DuplicatePresetNameException;
 import com.ravg95.tuner.exception.SettingsFormatException;
+import com.ravg95.tuner.fragment.SettingsFragment;
 import com.ravg95.tuner.util.Preset;
 
 import java.lang.reflect.Type;
@@ -53,7 +54,7 @@ public class SettingsManager {
         String presetName = appSharedPrefs.getString(CURR_PRESET_STRING, "");
         Preset currPreset = getPresetByName(presetName, context);
         if(currPreset == null) { //default option
-            currPreset = new Preset(6, "Guitar Standard", new String[]{"E4","B3", "G3", "D3", "A2", "E2"});
+            currPreset = new Preset(6, SettingsFragment.GUITAR_STANDARD, new String[]{"E2","A2", "D3", "G3", "B3", "E4"});
         }
         return currPreset;
     }

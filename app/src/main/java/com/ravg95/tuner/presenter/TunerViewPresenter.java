@@ -2,8 +2,8 @@ package com.ravg95.tuner.presenter;
 
 import android.content.Context;
 
-import com.ravg95.tuner.data.SettingsManager;
-import com.ravg95.tuner.data.ToneAnalyzer;
+import com.ravg95.tuner.tools.SettingsManager;
+import com.ravg95.tuner.tools.ToneAnalyzer;
 import com.ravg95.tuner.util.DoublePointer;
 import com.ravg95.tuner.util.Preset;
 
@@ -26,16 +26,16 @@ public class TunerViewPresenter {
     protected double angle;
 
 
-    public int findNearestString(String note, Preset currentPreset, DoublePointer distance) {
-        double[] distances = new double[currentPreset.getNumOfStrings()];
+    public static int findNearestString(String note, Preset currentPreset, DoublePointer distance) {
         int semiNote = ToneAnalyzer.getSemitonesFromNoteName(note);
-        double minDist = Double.MAX_VALUE;
-        int retIndex = 0;
-        for (int i = 0; i < currentPreset.getNumOfStrings(); i++) {
+        double distNote = distance.getValue();
+        int minDist = Integer.MAX_VALUE;
+        int retIndex = -1;
+        for(int i = 0; i < currentPreset.getNumOfStrings(); i++ ) {
             int semiString = ToneAnalyzer.getSemitonesFromNoteName(currentPreset.getStrings()[i]);
-            distances[i] = -100 * (semiNote - semiString) + (distance.getValue());
-            if (Math.abs(distances[i]) < Math.abs(minDist)) {
-                minDist = distances[i];
+            int dist = (int) (distNote + 100 * (semiNote - semiString));
+            if(Math.abs(dist) < Math.abs(minDist)) {
+                minDist = dist;
                 retIndex = i;
             }
         }

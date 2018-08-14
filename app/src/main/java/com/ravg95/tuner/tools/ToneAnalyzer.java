@@ -1,8 +1,7 @@
-package com.ravg95.tuner.data;
+package com.ravg95.tuner.tools;
 
 import android.content.Context;
 
-import com.ravg95.tuner.data.SettingsManager;
 import com.ravg95.tuner.util.DoublePointer;
 
 import java.util.Arrays;
@@ -47,11 +46,19 @@ public class ToneAnalyzer {
     public static int getSemitonesFromNoteName(String name){
         String tone = name.charAt(0)+"";
         char sign = name.charAt(1);
-        if(sign == '#' || sign == 'b')
-            tone = tone.concat(sign+"");
         int octave = name.charAt(name.length()-1) - '0';
         int toneIndex = Arrays.asList(toneNames).indexOf(tone);
-        //TODO:: make work for all kinds of tone naming eg. G# = Ab
+        if(sign == '#') {
+            toneIndex++;
+        } else if (sign == 'b') {
+            toneIndex--;
+        }
+        if(toneIndex < 0) {
+            toneIndex += toneNames.length;
+        }
+        else if(toneIndex >= toneNames.length) {
+            toneIndex -= toneNames.length;
+        }
         int semitones = (octave - 4) * 12 + toneIndex - indexOfA;
         return semitones;
     }

@@ -1,6 +1,7 @@
-package com.ravg95.tuner.data;
+package com.ravg95.tuner.tools;
 
 
+import android.media.AudioRecord;
 import android.util.Log;
 
 import com.ravg95.tuner.util.DoublePointer;
@@ -27,7 +28,6 @@ public class FrequencyRecognizer {
     }
 
     public void startListening() {
-
         AudioDispatcher dispatcher = AudioDispatcherFactory.fromDefaultMicrophone(SAMPLE_RATE,1024,0);
         PitchDetectionHandler pdh = new PitchDetectionHandler() {
             @Override
