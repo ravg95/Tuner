@@ -16,7 +16,7 @@ public class ToneAnalyzer {
     private static final double CONSTANT = 1.059463; // 2^(-12)
 
     private TreeMap<Double, String> tones;
-    //It is important that C is fisrt in this array as i will assume that in further calculations.
+    //It is important that C is first in this array as i will assume that in further calculations.
     public static final String[] toneNames = {"C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"};
     private static final int indexOfA = 9;
 

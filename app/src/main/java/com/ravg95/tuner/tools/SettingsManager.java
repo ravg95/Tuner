@@ -25,6 +25,10 @@ public class SettingsManager {
     private static final String BASE_FREQ_STRING = "BaseFreq";
     private static final String TOLERANCE_STRING = "Tolerance";
     private static final String CURR_PRESET_STRING = "CurrPreset";
+    private static final int MIN_TOLERANCE = 0;
+    private static final int MAX_TOLERANCE = 50;
+    private static final int MIN_BASE_FREQ = 200;
+    private static final int MAX_BASE_FREQ = 600;
 
     public static double getBaseFreq(Context context){
 
@@ -50,11 +54,11 @@ public class SettingsManager {
     public static Preset getCurrentPreset(Context context){
         SharedPreferences appSharedPrefs = PreferenceManager
                 .getDefaultSharedPreferences(context.getApplicationContext());
-
         String presetName = appSharedPrefs.getString(CURR_PRESET_STRING, "");
         Preset currPreset = getPresetByName(presetName, context);
-        if(currPreset == null) { //default option
-            currPreset = new Preset(6, SettingsFragment.GUITAR_STANDARD, new String[]{"E2","A2", "D3", "G3", "B3", "E4"});
+        if(currPreset == null) { //default preset
+            addDefaultPreset(context);
+            currPreset = getCurrentPreset(context);
         }
         return currPreset;
     }
@@ -66,7 +70,7 @@ public class SettingsManager {
         try{
             double frq = Double.parseDouble(frequency);
             int tl = Integer.parseInt(tolerance);
-            if(tl<0 || tl > 50 || frq < 200 || frq > 600)
+            if(tl<MIN_TOLERANCE || tl > MAX_TOLERANCE || frq < MIN_BASE_FREQ || frq > MAX_BASE_FREQ)
                 throw new SettingsFormatException();
         } catch (NumberFormatException e){
             throw new SettingsFormatException();
@@ -134,4 +138,15 @@ public class SettingsManager {
         return ret;
     }
 
+    private static void addDefaultPreset(Context context){
+        SharedPreferences.Editor prefsEditor = PreferenceManager
+                .getDefaultSharedPreferences(context.getApplicationContext()).edit();
+        try {
+            addPreset(SettingsFragment.GUITAR_STANDARD,6, new String[]{"E2","A2", "D3", "G3", "B3", "E4"}, context);
+        } catch (DuplicatePresetNameException e) {
+            e.printStackTrace();
+        }
+        prefsEditor.putString(CURR_PRESET_STRING, SettingsFragment.GUITAR_STANDARD);
+        prefsEditor.commit();
+    }
 }

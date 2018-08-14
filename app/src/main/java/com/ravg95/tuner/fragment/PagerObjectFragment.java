@@ -31,7 +31,6 @@ public class PagerObjectFragment extends Fragment {
             rootView = inflater.inflate(
                     R.layout.gauge_view_fragment, container, false);
         }
-
         return rootView;
     }
 }
