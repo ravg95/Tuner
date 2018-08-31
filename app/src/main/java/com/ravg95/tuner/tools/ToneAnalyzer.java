@@ -1,7 +1,8 @@
-package com.ravg95.tuner;
+package com.ravg95.tuner.tools;
 
 import android.content.Context;
-import android.util.Log;
+
+import com.ravg95.tuner.util.DoublePointer;
 
 import java.util.Arrays;
 import java.util.TreeMap;
@@ -12,14 +13,14 @@ import java.util.TreeMap;
  */
 
 public class ToneAnalyzer {
-    private static final double CONSTANT = 1.059463; // 2^-12
+    private static final double CONSTANT = 1.059463; // 2^(-12)
 
     private TreeMap<Double, String> tones;
-    //It is important that C is fisrt in this array as i will assume that in further calculations.
+    //It is important that C is first in this array as i will assume that in further calculations.
     public static final String[] toneNames = {"C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"};
     private static final int indexOfA = 9;
 
-    String getNearestNoteAndDistance(double freq, DoublePointer distance, Context context) throws NoteOutOfBoundsException {
+    public String getNearestNoteAndDistance(double freq, DoublePointer distance, Context context) {
         double semitones = Math.log(freq / SettingsManager.getBaseFreq(context)) / Math.log(CONSTANT);
         double roundSemitones = Math.round(semitones);
         double cents = (semitones - roundSemitones)*100;
@@ -44,22 +45,21 @@ public class ToneAnalyzer {
 
     public static int getSemitonesFromNoteName(String name){
         String tone = name.charAt(0)+"";
+        char sign = name.charAt(1);
         int octave = name.charAt(name.length()-1) - '0';
-        Log.d("note to freq:","tone: "+tone + " octave: "+ octave);
-        int toneIndex = Arrays.binarySearch(toneNames,tone);
-        int semitones = 12*octave - indexOfA - 4*toneNames.length;
-        int distT = indexOfA - toneIndex;
-        if(octave<4 || (octave == 4 && distT > 0)){
-            semitones += distT;
-            semitones = -semitones;
-        } else if(octave>4 || (octave == 4 && distT < 0)) {
-            semitones -= distT;
+        int toneIndex = Arrays.asList(toneNames).indexOf(tone);
+        if(sign == '#') {
+            toneIndex++;
+        } else if (sign == 'b') {
+            toneIndex--;
         }
+        if(toneIndex < 0) {
+            toneIndex += toneNames.length;
+        }
+        else if(toneIndex >= toneNames.length) {
+            toneIndex -= toneNames.length;
+        }
+        int semitones = (octave - 4) * 12 + toneIndex - indexOfA;
         return semitones;
-    }
-
-
-
-    class NoteOutOfBoundsException extends Throwable {
     }
 }

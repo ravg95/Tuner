@@ -1,15 +1,17 @@
-package com.ravg95.tuner;
+package com.ravg95.tuner.util;
 
-import java.util.HashMap;
 
-import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * Created by rafal on 15/02/2018.
  */
 public class Preset {
+    @Getter
     int numOfStrings;
+    @Getter
     String name;
+    @Getter
     String[] strings;
 
     public Preset(int numOfStrings, String name, String[] strings){

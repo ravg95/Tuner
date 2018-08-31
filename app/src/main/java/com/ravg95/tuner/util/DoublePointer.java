@@ -1,11 +1,9 @@
-package com.ravg95.tuner;
+package com.ravg95.tuner.util;
 
 
 import lombok.Getter;
 import lombok.Setter;
-
-
-class DoublePointer {
+public class DoublePointer {
     @Getter
     private double value = 0;
     @Setter

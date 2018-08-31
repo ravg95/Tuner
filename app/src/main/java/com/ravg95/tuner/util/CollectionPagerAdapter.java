@@ -1,27 +1,27 @@
-package com.ravg95.tuner;
+package com.ravg95.tuner.util;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.ravg95.tuner.fragment.PagerObjectFragment;
+
 /**
  * Created by rafal on 16/05/2018.
  */
 
-class CollectionPagerAdapter extends FragmentPagerAdapter {
+public class CollectionPagerAdapter extends FragmentPagerAdapter {
     public CollectionPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
     @Override
     public Fragment getItem(int i) {
-        Fragment fragment = new ObjectFragment();
+        Fragment fragment = new PagerObjectFragment();
         Bundle args = new Bundle();
-        // Our object is just an integer :-P
-        args.putInt(ObjectFragment.ARG_OBJECT, i + 1);
+        args.putInt(PagerObjectFragment.ARG_OBJECT, i + 1);
         fragment.setArguments(args);
-
         return fragment;
     }
 
@@ -29,11 +29,5 @@ class CollectionPagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return 2;
     }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return "OBJECT " + (position + 1);
-    }
-
 }
 

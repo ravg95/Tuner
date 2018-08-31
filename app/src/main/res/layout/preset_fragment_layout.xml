@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_margin="10dp"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -22,12 +23,20 @@
             android:id="@+id/preset_name_field"
             android:layout_width="303dp"
             android:layout_height="wrap_content"
+            android:hint="Preset Name"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             tools:text="Guitar Standard" />
 
     </LinearLayout>
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_margin="10dp"
+        android:text="Strings:"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
