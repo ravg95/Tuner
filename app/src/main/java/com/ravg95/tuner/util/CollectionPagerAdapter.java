@@ -20,10 +20,8 @@ public class CollectionPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int i) {
         Fragment fragment = new PagerObjectFragment();
         Bundle args = new Bundle();
-        // Our object is just an integer :-P
         args.putInt(PagerObjectFragment.ARG_OBJECT, i + 1);
         fragment.setArguments(args);
-
         return fragment;
     }
 
@@ -31,11 +29,5 @@ public class CollectionPagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return 2;
     }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return "OBJECT " + (position + 1);
-    }
-
 }
 

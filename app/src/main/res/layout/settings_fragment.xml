@@ -45,6 +45,7 @@
         android:layout_marginEnd="76dp"
         android:layout_marginTop="28dp"
         android:ems="10"
+        android:hint="440"
         android:inputType="numberDecimal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -61,6 +62,7 @@
         android:layout_marginEnd="84dp"
         android:layout_marginTop="8dp"
         android:ems="10"
+        android:hint="5"
         android:inputType="numberDecimal"
         app:layout_constraintBottom_toTopOf="@+id/delpreset"
         app:layout_constraintEnd_toEndOf="parent"
@@ -144,7 +146,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/spinner"
         app:layout_constraintEnd_toEndOf="@+id/toleranceText"
         tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintTop_creator="1" />
+        tools:layout_constraintTop_creator="1"
+        android:contentDescription="delete" />
 
     <FrameLayout
         android:id="@+id/presetFragmenContainer"

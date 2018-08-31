@@ -21,13 +21,15 @@ import java.util.TimerTask;
  */
 
 public class MainFragmentPresenter implements DoublePointer.OnValueChangedListener {
+
     public static final int PERMISSION_REQUEST_RECORD_AUDIO = 1;
     private FrequencyRecognizer frequencyRecognizer;
     private ToneAnalyzer toneAnalyzer;
     private boolean isListeningPaused = true;
     private MainFragment mainFragment;
     private AnimationThread animationThread;
-    public MainFragmentPresenter(MainFragment mainFragment){
+
+    public MainFragmentPresenter(MainFragment mainFragment) {
         frequencyRecognizer = new FrequencyRecognizer(new DoublePointer(0, this));
         toneAnalyzer = new ToneAnalyzer();
         animationThread = new AnimationThread();
@@ -60,10 +62,7 @@ public class MainFragmentPresenter implements DoublePointer.OnValueChangedListen
 
     }
 
-
-
-
-    public void pause(){
+    public void pause() {
         frequencyRecognizer.stopListening();
         animationThread.cancel();
         isListeningPaused = true;
@@ -77,8 +76,12 @@ public class MainFragmentPresenter implements DoublePointer.OnValueChangedListen
                         new String[]{Manifest.permission.RECORD_AUDIO},
                         PERMISSION_REQUEST_RECORD_AUDIO);
         } else {
-            scheduleListening();
+            startListening();
         }
+    }
+
+    public void settingsButton() {
+        mainFragment.openSettings();
     }
 
     private class AnimationThread extends TimerTask {
@@ -88,10 +91,9 @@ public class MainFragmentPresenter implements DoublePointer.OnValueChangedListen
         }
     }
 
-    private void scheduleListening(){
+    private void startListening() {
             frequencyRecognizer.startListening();
             isListeningPaused = false;
 
     }
-
 }

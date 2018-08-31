@@ -25,22 +25,22 @@ import lombok.Setter;
 
 public class PresetCreatorFragment extends Fragment{
 
-    LinearLayout stringsLayout;
+    private LinearLayout stringsLayout;
     @Setter
     SpinnerAdapterUpdater spinnerAdapterUpdater;
     private EditText nameField;
-    PresetCreatorFragmentPresenter presetCreatorFragmentPresenter = new PresetCreatorFragmentPresenter(this);
+    private final PresetCreatorFragmentPresenter presetCreatorFragmentPresenter = new PresetCreatorFragmentPresenter(this);
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(
                 R.layout.preset_fragment_layout, container, false);
-        Button rmBtn = (Button) rootView.findViewById(R.id.remove_string_button);
-        Button addBtn = (Button) rootView.findViewById(R.id.add_string_button);
-        Button saveBtn = (Button) rootView.findViewById(R.id.save_preset_button);
-        Button exitBtn = (Button) rootView.findViewById(R.id.cancel_preset_button);
-        stringsLayout = (LinearLayout) rootView.findViewById(R.id.strings_container);
-        nameField = (EditText) rootView.findViewById(R.id.preset_name_field);
+        Button rmBtn = rootView.findViewById(R.id.remove_string_button);
+        Button addBtn = rootView.findViewById(R.id.add_string_button);
+        Button saveBtn = rootView.findViewById(R.id.save_preset_button);
+        Button exitBtn = rootView.findViewById(R.id.cancel_preset_button);
+        stringsLayout = rootView.findViewById(R.id.strings_container);
+        nameField = rootView.findViewById(R.id.preset_name_field);
 
 
         addBtn.setOnClickListener(new View.OnClickListener() {
@@ -74,7 +74,7 @@ public class PresetCreatorFragment extends Fragment{
 
     public View onAddField() {
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View v = inflater.inflate(R.layout.field, null);
+        final View v = inflater.inflate(R.layout.field, stringsLayout);
         stringsLayout.addView(v, stringsLayout.getChildCount());
         return v;
     }

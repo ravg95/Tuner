@@ -22,10 +22,10 @@ import java.util.Optional;
  */
 
 public class MainFragment extends Fragment{
+
     CollectionPagerAdapter collectionPagerAdapter;
     ViewPager viewPager;
     private MainFragmentPresenter mainFragmentPresenter = new MainFragmentPresenter(this);
-
 
     @Nullable
     @Override
@@ -45,18 +45,13 @@ public class MainFragment extends Fragment{
         settingsFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.container, new SettingsFragment(), "SETTINGS")
-                        .addToBackStack("SETTINGS")
-                        .commit();
+               mainFragmentPresenter.settingsButton();
             }
         });
 
 
         return rootView;
     }
-
 
     public TunerView getTunerView() {
         try {
@@ -88,5 +83,13 @@ public class MainFragment extends Fragment{
     public void onPause() {
         super.onPause();
         mainFragmentPresenter.pause();
+    }
+
+    public void openSettings() {
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container, new SettingsFragment(), "SETTINGS")
+                .addToBackStack("SETTINGS")
+                .commit();
     }
 }

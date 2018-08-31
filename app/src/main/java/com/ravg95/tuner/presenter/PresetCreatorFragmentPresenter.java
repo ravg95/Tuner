@@ -16,9 +16,7 @@ public class PresetCreatorFragmentPresenter {
     public PresetCreatorFragmentPresenter(PresetCreatorFragment presetCreatorFragment){
         stringViews = new ArrayList<>();
         this.presetCreatorFragment = presetCreatorFragment;
-
     }
-
 
     public void add() {
         View newView = presetCreatorFragment.onAddField();
@@ -40,7 +38,7 @@ public class PresetCreatorFragmentPresenter {
         int numOfStrings = stringViews.size();
         String name = presetCreatorFragment.getNameText();
         String[] strings = new String[numOfStrings];
-        for(int i = 0; i < numOfStrings; i++){
+        for(int i = 0; i < numOfStrings; i++) {
             strings[i] = ((EditText)stringViews.get(i)).getText().toString();
             if(!strings[i].matches("[A-Ga-g][b#0-9][0-9]?")){
                 presetCreatorFragment.displayWarning("Incorrect string name");
@@ -59,6 +57,5 @@ public class PresetCreatorFragmentPresenter {
         } catch (DuplicatePresetNameException e) {
             presetCreatorFragment.displayWarning("Preset name already in use");
         }
-
     }
 }

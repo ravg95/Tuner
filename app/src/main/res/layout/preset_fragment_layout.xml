@@ -23,6 +23,7 @@
             android:id="@+id/preset_name_field"
             android:layout_width="303dp"
             android:layout_height="wrap_content"
+            android:hint="Preset Name"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             tools:text="Guitar Standard" />
